@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pharahs Premium Salon & Beauty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0a14;
+    --paper: #faf9f7;
+    --plum: #3d1a5e;
+    --violet: #6b3fa0;
+    --orchid: #c084fc;
+    --blush: #f5e6ff;
+    --mist: #f0ebf7;
+    --gold: #d4a96a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 2.5rem;
+    background: rgba(250,249,247,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(107,63,160,0.08);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(61,26,94,0.08); }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--plum);
+    text-decoration: none;
+  }
+  .logo span { color: var(--gold); font-style: italic; }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--ink); text-decoration: none; opacity: 0.65;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--violet); }
+
+  .nav-cta {
+    background: var(--plum);
+    color: #fff;
+    border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.65rem 1.5rem; border-radius: 2rem;
+    transition: background 0.25s, transform 0.2s;
+  }
+  .nav-cta:hover { background: var(--violet); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; place-items: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 20% 30%, rgba(192,132,252,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 70%, rgba(107,63,160,0.08) 0%, transparent 60%),
+      var(--paper);
+  }
+
+  /* Decorative lines */
+  .hero-bg::before {
+    content: '';
+    position: absolute; top: 15%; left: 5%;
+    width: 180px; height: 180px;
+    border: 1px solid rgba(107,63,160,0.15);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute; bottom: 20%; right: 8%;
+    width: 120px; height: 120px;
+    border: 1px solid rgba(212,169,106,0.2);
+    border-radius: 50%;
+    animation: float 10s ease-in-out infinite reverse;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-12px) scale(1.03); }
+  }
+
+  .hero-inner { position: relative; z-index: 1; max-width: 720px; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--violet); opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; width: 28px; height: 1px; background: var(--orchid);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--ink);
+    margin: 1.2rem 0 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.4s;
+  }
+  .hero-title em { font-style: italic; color: var(--violet); }
+
+  .hero-sub {
+    font-size: 1rem; font-weight: 300; line-height: 1.7;
+    color: rgba(15,10,20,0.55); max-width: 480px; margin: 1.2rem auto 2.5rem;
+    opacity: 0; animation: fadeUp 0.9s ease forwards 0.6s;
+  }
+
+  .hero-btns {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.9s ease forwards 0.8s;
+  }
+
+  .btn-primary {
+    background: var(--plum);
+    color: #fff; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.9rem 2.4rem; border-radius: 2rem;
+    transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+    box-shadow: 0 4px 20px rgba(61,26,94,0.25);
+  }
+  .btn-primary:hover {
+    background: var(--violet);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(61,26,94,0.35);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--plum); cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.9rem 2.4rem; border-radius: 2rem;
+    border: 1.5px solid rgba(107,63,160,0.3);
+    transition: border-color 0.25s, background 0.25s, transform 0.2s;
+  }
+  .btn-ghost:hover {
+    border-color: var(--violet);
+    background: var(--mist);
+    transform: translateY(-2px);
+  }
+
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(15,10,20,0.35);
+    animation: fadeIn 1s ease forwards 1.4s; opacity: 0;
+  }
+  .scroll-line {
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, rgba(107,63,160,0.5), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1); opacity: 0.6; }
+    50% { transform: scaleY(1.3); opacity: 1; }
+  }
+
+  /* ── SERVICES ── */
+  .section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+  .section-header { text-align: center; margin-bottom: 3.5rem; }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--violet); margin-bottom: 0.75rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  }
+  .section-label::before, .section-label::after {
+    content: ''; width: 28px; height: 1px; background: var(--orchid);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300; color: var(--ink); line-height: 1.1;
+  }
+  .section-title em { font-style: italic; color: var(--violet); }
+  .section-desc {
+    font-size: 0.95rem; color: rgba(15,10,20,0.5);
+    max-width: 480px; margin: 1rem auto 0; line-height: 1.7;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .service-card {
+    background: #fff;
+    border: 1px solid rgba(107,63,160,0.1);
+    border-radius: 1.25rem;
+    padding: 2rem 1.8rem;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    cursor: pointer;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--violet), var(--orchid));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(61,26,94,0.12); border-color: rgba(107,63,160,0.25); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    width: 52px; height: 52px;
+    background: var(--mist);
+    border-radius: 0.875rem;
+    display: grid; place-items: center;
+    margin-bottom: 1.4rem;
+    transition: background 0.3s;
+  }
+  .service-card:hover .service-icon { background: var(--blush); }
+  .service-icon svg { width: 26px; height: 26px; stroke: var(--violet); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400; color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .service-desc { font-size: 0.85rem; color: rgba(15,10,20,0.5); line-height: 1.65; margin-bottom: 1.5rem; }
+
+  .service-meta { display: flex; gap: 1.2rem; margin-bottom: 1.5rem; }
+  .service-meta-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.75rem; color: rgba(15,10,20,0.45);
+  }
+  .service-meta-item svg { width: 14px; height: 14px; stroke: var(--orchid); fill: none; stroke-width: 2; }
+
+  .service-footer { display: flex; align-items: center; justify-content: space-between; }
+  .service-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 600; color: var(--plum);
+  }
+  .service-price span { font-size: 0.85rem; font-weight: 300; color: rgba(15,10,20,0.4); }
+  .book-btn {
+    background: var(--mist); color: var(--violet);
+    border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.6rem 1.3rem; border-radius: 2rem;
+    transition: background 0.25s, color 0.25s, transform 0.2s;
+  }
+  .book-btn:hover { background: var(--plum); color: #fff; transform: scale(1.03); }
+
+  /* ── WHY US ── */
+  .why-section {
+    background: linear-gradient(135deg, var(--plum) 0%, #5a2d84 100%);
+    padding: 6rem 2rem; color: #fff; position: relative; overflow: hidden;
+  }
+  .why-section::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .why-section::after {
+    content: '';
+    position: absolute; bottom: -60px; left: -60px;
+    width: 220px; height: 220px;
+    border: 1px solid rgba(212,169,106,0.12);
+    border-radius: 50%;
+  }
+  .why-inner { max-width: 1100px; margin: 0 auto; }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .why-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orchid); margin-bottom: 0.75rem; }
+  .why-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; line-height: 1.1;
+    color: #fff;
+  }
+  .why-title em { font-style: italic; color: var(--orchid); }
+  .why-body { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.75; margin-top: 1rem; }
+  .why-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+  .stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.4rem; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem; font-weight: 300; color: var(--orchid);
+  }
+  .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; }
+
+  .why-features { display: flex; flex-direction: column; gap: 1.2rem; }
+  .feature {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1.2rem 1.4rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.875rem;
+    transition: background 0.25s;
+  }
+  .feature:hover { background: rgba(255,255,255,0.09); }
+  .feature-icon {
+    width: 40px; height: 40px; min-width: 40px;
+    background: rgba(192,132,252,0.15); border-radius: 0.625rem;
+    display: grid; place-items: center;
+  }
+  .feature-icon svg { width: 20px; height: 20px; stroke: var(--orchid); fill: none; stroke-width: 1.5; }
+  .feature-title { font-size: 0.9rem; font-weight: 500; color: #fff; margin-bottom: 0.25rem; }
+  .feature-desc { font-size: 0.78rem; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3.5rem; }
+  .testi-card {
+    background: #fff; border: 1px solid rgba(107,63,160,0.1);
+    border-radius: 1.25rem; padding: 1.8rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .testi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(61,26,94,0.1); }
+  .stars { display: flex; gap: 3px; margin-bottom: 1rem; }
+  .stars span { color: var(--gold); font-size: 0.9rem; }
+  .testi-text { font-size: 0.88rem; color: rgba(15,10,20,0.6); line-height: 1.7; font-style: italic; margin-bottom: 1.4rem; }
+  .testi-author { display: flex; align-items: center; gap: 0.75rem; }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--mist); display: grid; place-items: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--violet);
+  }
+  .author-name { font-size: 0.85rem; font-weight: 500; color: var(--ink); }
+  .author-role { font-size: 0.72rem; color: rgba(15,10,20,0.4); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.7);
+    padding: 4rem 2rem 2rem;
+  }
+  .footer-inner { max-width: 1100px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand .logo { color: #fff; margin-bottom: 0.75rem; display: block; }
+  .footer-brand p { font-size: 0.82rem; line-height: 1.7; color: rgba(255,255,255,0.4); max-width: 220px; }
+  .social-icons { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+  .social-icon {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%; display: grid; place-items: center;
+    transition: background 0.25s, border-color 0.25s;
+    cursor: pointer; text-decoration: none;
+  }
+  .social-icon:hover { background: rgba(192,132,252,0.2); border-color: rgba(192,132,252,0.4); }
+  .social-icon svg { width: 16px; height: 16px; stroke: rgba(255,255,255,0.6); fill: none; stroke-width: 1.5; }
+  .footer-col h4 { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: #fff; margin-bottom: 1.2rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+  .footer-col ul li a { font-size: 0.82rem; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--orchid); }
+  .footer-col ul li { font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+
+  .footer-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(107,63,160,0.5), transparent); margin-bottom: 1.5rem; }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(15,10,20,0.65); backdrop-filter: blur(6px);
+    display: grid; place-items: center; padding: 1.5rem;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; visibility: visible; }
+
+  .modal {
+    background: var(--paper);
+    border-radius: 1.5rem; padding: 2.5rem;
+    max-width: 520px; width: 100%;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative; max-height: 90vh; overflow-y: auto;
+  }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+  .modal-close {
+    position: absolute; top: 1.2rem; right: 1.2rem;
+    width: 32px; height: 32px; background: var(--mist);
+    border: none; cursor: pointer; border-radius: 50%;
+    display: grid; place-items: center;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: var(--blush); }
+  .modal-close svg { width: 16px; height: 16px; stroke: var(--plum); fill: none; stroke-width: 2; }
+
+  .modal-tag {
+    font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--violet); background: var(--mist);
+    padding: 0.3rem 0.75rem; border-radius: 2rem;
+    display: inline-block; margin-bottom: 1rem;
+  }
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 400; color: var(--ink); margin-bottom: 0.5rem;
+  }
+  .modal-sub { font-size: 0.85rem; color: rgba(15,10,20,0.5); line-height: 1.65; margin-bottom: 1.8rem; }
+
+  .form-group { margin-bottom: 1.2rem; }
+  .form-label { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(15,10,20,0.5); margin-bottom: 0.4rem; display: block; }
+  .form-input {
+    width: 100%; padding: 0.75rem 1rem;
+    border: 1.5px solid rgba(107,63,160,0.15);
+    border-radius: 0.75rem; background: #fff;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--ink);
+    transition: border-color 0.25s, box-shadow 0.25s; outline: none;
+  }
+  .form-input:focus { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(107,63,160,0.1); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+  .price-summary {
+    background: var(--mist); border-radius: 1rem; padding: 1.2rem 1.4rem;
+    margin: 1.5rem 0; display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .price-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: rgba(15,10,20,0.6); }
+  .price-row.total { font-weight: 500; color: var(--ink); font-size: 0.95rem; padding-top: 0.5rem; border-top: 1px solid rgba(107,63,160,0.15); }
+  .price-row .amount { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--plum); }
+
+  .modal-btn { width: 100%; background: var(--plum); color: #fff; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.95rem; border-radius: 0.875rem; transition: background 0.25s, transform 0.2s; margin-top: 0.5rem; }
+  .modal-btn:hover { background: var(--violet); transform: translateY(-1px); }
+
+  /* Success modal */
+  .success-icon {
+    width: 64px; height: 64px; background: var(--mist);
+    border-radius: 50%; display: grid; place-items: center; margin: 0 auto 1.5rem;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  @keyframes popIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+  .success-icon svg { width: 30px; height: 30px; stroke: var(--violet); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .success-modal { text-align: center; }
+  .success-modal .modal-title { margin-bottom: 0.5rem; }
+
+  /* ── SHOP / ITEMS ── */
+  .shop-section { padding: 6rem 2rem; background: var(--mist); }
+  .shop-inner { max-width: 1100px; margin: 0 auto; }
+
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.8rem;
+    margin-top: 3.5rem;
+  }
+
+  .item-card {
+    background: #fff;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(107,63,160,0.1);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+  .item-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(61,26,94,0.13); }
+
+  .item-img {
+    height: 220px;
+    display: grid; place-items: center;
+    position: relative; overflow: hidden;
+  }
+  .item-img-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.4s ease;
+  }
+  .item-card:hover .item-img-bg { transform: scale(1.05); }
+  .item-img-icon {
+    position: relative; z-index: 1;
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(6px);
+    border-radius: 1.25rem;
+    display: grid; place-items: center;
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+  .item-img-icon svg { width: 40px; height: 40px; stroke: #fff; fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+
+  .item-badge {
+    position: absolute; top: 1rem; left: 1rem; z-index: 2;
+    background: var(--gold); color: #fff;
+    font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.25rem 0.65rem; border-radius: 2rem; font-weight: 500;
+  }
+
+  .item-body { padding: 1.6rem; }
+  .item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400; color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .item-tagline { font-size: 0.82rem; color: rgba(15,10,20,0.5); line-height: 1.6; margin-bottom: 1.2rem; }
+
+  .item-footer { display: flex; align-items: center; justify-content: space-between; }
+  .item-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 600; color: var(--plum);
+  }
+  .item-price span { font-size: 0.8rem; font-weight: 300; color: rgba(15,10,20,0.4); font-family: 'DM Sans', sans-serif; }
+  .item-view-btn {
+    background: var(--mist); color: var(--violet);
+    border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.55rem 1.1rem; border-radius: 2rem;
+    transition: background 0.25s, color 0.25s;
+  }
+  .item-view-btn:hover { background: var(--plum); color: #fff; }
+
+  /* Item detail modal specifics */
+  .item-detail-header {
+    height: 180px; border-radius: 1rem; margin-bottom: 1.5rem;
+    display: grid; place-items: center; position: relative; overflow: hidden;
+  }
+  .item-detail-header-icon {
+    width: 68px; height: 68px;
+    background: rgba(255,255,255,0.25); backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 1rem; display: grid; place-items: center; position: relative; z-index: 1;
+  }
+  .item-detail-header-icon svg { width: 34px; height: 34px; stroke: #fff; fill: none; stroke-width: 1.3; }
+
+  .item-info-block {
+    background: var(--mist); border-radius: 0.875rem;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+  }
+  .item-info-title {
+    font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--violet); margin-bottom: 0.5rem;
+  }
+  .item-info-text { font-size: 0.85rem; color: rgba(15,10,20,0.65); line-height: 1.7; }
+
+  .item-ingredients { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .ingredient-tag {
+    background: #fff; border: 1px solid rgba(107,63,160,0.18);
+    color: var(--violet); font-size: 0.72rem; padding: 0.2rem 0.65rem;
+    border-radius: 2rem;
+  }
+
+  .modal-btn-ghost {
+    width: 100%; background: transparent; color: var(--plum);
+    border: 1.5px solid rgba(107,63,160,0.25); cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.85rem; border-radius: 0.875rem;
+    transition: border-color 0.25s, background 0.25s;
+    margin-top: 0.5rem;
+  }
+  .modal-btn-ghost:hover { border-color: var(--violet); background: var(--mist); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .why-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(107,63,160,0.3); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo">Lu<span>rahs</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openBookingModal(null)">Book Now</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Premium Beauty & Wellness</div>
+    <h1 class="hero-title">Where Beauty<br>Becomes <em>Art</em></h1>
+    <p class="hero-sub">An elevated salon experience tailored exclusively for you — where every visit is a ritual of transformation and self-care.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="openBookingModal(null)">Book an Appointment</button>
+      <button class="btn-ghost" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">View Services</button>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="section-header">
+    <div class="section-label">Our Offerings</div>
+    <h2 class="section-title">Curated <em>Services</em></h2>
+    <p class="section-desc">Each service is crafted with intention, using only the finest products and techniques for outstanding results.</p>
+  </div>
+  <div class="services-grid" id="services-grid"></div>
+</section>
+
+<!-- WHY US -->
+<section class="why-section" id="about">
+  <div class="why-inner">
+    <div class="why-grid">
+      <div>
+        <div class="why-label">Why Pharahs</div>
+        <h2 class="why-title">Excellence in Every <em>Detail</em></h2>
+        <p class="why-body">We believe beauty is a personal journey. Our team of master stylists brings artistry and expertise to every appointment, creating results that feel as good as they look.</p>
+        <div class="why-stats">
+          <div class="stat">
+            <div class="stat-num">2,400+</div>
+            <div class="stat-label">Clients served</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">8 yrs</div>
+            <div class="stat-label">Of excellence</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">98%</div>
+            <div class="stat-label">Satisfaction rate</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">12</div>
+            <div class="stat-label">Expert stylists</div>
+          </div>
+        </div>
+      </div>
+      <div class="why-features">
+        <div class="feature">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div>
+            <div class="feature-title">Master Stylists</div>
+            <div class="feature-desc">Award-winning team trained in the latest global beauty trends and techniques.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div>
+            <div class="feature-title">Premium Products Only</div>
+            <div class="feature-desc">We use exclusively professional-grade, ethically sourced beauty products.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="feature-title">Hygienic & Safe</div>
+            <div class="feature-desc">Strict sanitation protocols and a pristine environment at every station.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="feature-title">Flexible Scheduling</div>
+            <div class="feature-desc">Book at your convenience, with early morning and evening slots available.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="section-header">
+    <div class="section-label">Client Love</div>
+    <h2 class="section-title">What They <em>Say</em></h2>
+  </div>
+  <div class="testi-grid" id="testi-grid"></div>
+</section>
+
+<!-- SHOP -->
+<section class="shop-section" id="shop">
+  <div class="shop-inner">
+    <div class="section-header">
+      <div class="section-label">Our Products</div>
+      <h2 class="section-title">The <em>Collection</em></h2>
+      <p class="section-desc">Salon-grade beauty essentials curated for your everyday ritual — delivered straight to your door.</p>
+    </div>
+    <div class="items-grid" id="items-grid"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">Lu<span>rahs</span></a>
+        <p>Elevating beauty through artistry, care, and a deeply personal touch since 2017.</p>
+        <div class="social-icons">
+          <a class="social-icon" href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a class="social-icon" href="#" aria-label="Twitter">
+            <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+          </a>
+          <a class="social-icon" href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a class="social-icon" href="#" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">Hair Styling</a></li>
+          <li><a href="#services">Balayage & Color</a></li>
+          <li><a href="#services">Skincare Facials</a></li>
+          <li><a href="#services">Nail Art</a></li>
+          <li><a href="#services">Bridal Packages</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#" onclick="openBookingModal(null);return false;">Book Now</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li>
+            <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l1.06-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            +234 800 000 0000
+          </li>
+          <li>
+            <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ef6fbf2f2f1def2ebf3f7fbecfbedfff2f1f0b0fdf1f3">[email&#160;protected]</a>
+          </li>
+          <li>
+            <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Lagos, Nigeria
+          </li>
+          <li>Mon–Sat: 9am – 7pm</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <p>© 2026 Pharahs Salon. All rights reserved.</p>
+      <p>Crafted with ♥ for beauty lovers</p>
+    </div>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="booking-overlay" onclick="closeOnOverlay(event,'booking-overlay')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('booking-overlay')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <span class="modal-tag">Book Appointment</span>
+    <h2 class="modal-title" id="booking-service-name">Service</h2>
+    <p class="modal-sub" id="booking-service-desc">Fill in your details below to reserve your session.</p>
+
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input class="form-input" type="text" placeholder="Your full name" id="field-name">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" type="tel" placeholder="+234...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="you@email.com">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Preferred Date</label>
+      <input class="form-input" type="date" id="field-date">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">State</label>
+        <select class="form-input" id="field-state" onchange="updateFee()">
+          <option value="">Select state</option>
+          <option value="lagos">Lagos</option>
+          <option value="abuja">Abuja</option>
+          <option value="ph">Port Harcourt</option>
+          <option value="ibadan">Ibadan</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">City / Area</label>
+        <input class="form-input" type="text" placeholder="Your area">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Address</label>
+      <input class="form-input" type="text" placeholder="Full address">
+    </div>
+
+    <div class="price-summary">
+      <div class="price-row"><span>Service</span><span class="amount" id="summary-base">₦0</span></div>
+      <div class="price-row"><span>Travel / Service Fee</span><span class="amount" id="summary-fee">₦0</span></div>
+      <div class="price-row total"><span>Total</span><span class="amount" id="summary-total">₦0</span></div>
+    </div>
+    <button class="modal-btn" onclick="proceedToCheckout()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkout-overlay" onclick="closeOnOverlay(event,'checkout-overlay')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('checkout-overlay')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <span class="modal-tag">Checkout</span>
+    <h2 class="modal-title">Confirm & Pay</h2>
+    <p class="modal-sub">Review your booking details and proceed to secure payment.</p>
+
+    <div class="price-summary" style="margin-top:0">
+      <div class="price-row"><span>Service</span><span class="amount" id="co-service">—</span></div>
+      <div class="price-row"><span>Service Base</span><span class="amount" id="co-base">₦0</span></div>
+      <div class="price-row"><span>Travel Fee</span><span class="amount" id="co-fee">₦0</span></div>
+      <div class="price-row total"><span>Total Due</span><span class="amount" id="co-total">₦0</span></div>
+    </div>
+
+    <div class="form-group" style="margin-top:1rem">
+      <label class="form-label">Card Details (via Paystack)</label>
+      <div style="background:var(--mist);border-radius:0.75rem;padding:1rem;font-size:0.82rem;color:rgba(15,10,20,0.5);">
+        You will be redirected to Paystack's secure payment page to complete your transaction.
+      </div>
+    </div>
+    <button class="modal-btn" onclick="processPayment()">Pay Now — <span id="co-pay-amount">₦0</span></button>
+  </div>
+</div>
+
+<!-- ITEM DETAIL MODAL -->
+<div class="modal-overlay" id="item-detail-overlay" onclick="closeOnOverlay(event,'item-detail-overlay')">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeModal('item-detail-overlay')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="item-detail-header" id="item-detail-header-bg">
+      <div class="item-detail-header-icon" id="item-detail-header-icon"></div>
+    </div>
+
+    <span class="modal-tag" id="item-detail-badge">Bestseller</span>
+    <h2 class="modal-title" id="item-detail-name">Product Name</h2>
+    <p class="modal-sub" id="item-detail-tagline">Tagline here</p>
+
+    <div class="item-info-block">
+      <div class="item-info-title">Description</div>
+      <div class="item-info-text" id="item-detail-desc">—</div>
+    </div>
+
+    <div class="item-info-block">
+      <div class="item-info-title">How to Use</div>
+      <div class="item-info-text" id="item-detail-how">—</div>
+    </div>
+
+    <div class="item-info-block">
+      <div class="item-info-title">Key Ingredients</div>
+      <div class="item-ingredients" id="item-detail-ingredients"></div>
+    </div>
+
+    <div class="price-summary" style="margin:1.2rem 0 0">
+      <div class="price-row total">
+        <span>Price</span>
+        <span class="amount" id="item-detail-price">₦0</span>
+      </div>
+    </div>
+
+    <button class="modal-btn" onclick="openOrderModal()" style="margin-top:1rem">Order Now →</button>
+    <button class="modal-btn-ghost" onclick="closeModal('item-detail-overlay')">Maybe Later</button>
+  </div>
+</div>
+
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="order-overlay" onclick="closeOnOverlay(event,'order-overlay')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('order-overlay')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <span class="modal-tag">Place Order</span>
+    <h2 class="modal-title" id="order-product-name">Product</h2>
+    <p class="modal-sub">Enter your delivery details below and we'll bring it right to you.</p>
+
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input class="form-input" type="text" id="order-name" placeholder="Your full name">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" type="tel" id="order-phone" placeholder="+234...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="order-email" placeholder="you@email.com">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Delivery Address</label>
+      <input class="form-input" type="text" id="order-address" placeholder="House no., street, area">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">State</label>
+        <select class="form-input" id="order-state" onchange="updateOrderTotal()">
+          <option value="">Select state</option>
+          <option value="lagos">Lagos</option>
+          <option value="abuja">Abuja</option>
+          <option value="ph">Port Harcourt</option>
+          <option value="ibadan">Ibadan</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Quantity</label>
+        <input class="form-input" type="number" id="order-qty" value="1" min="1" max="10" oninput="updateOrderTotal()">
+      </div>
+    </div>
+
+    <div class="price-summary">
+      <div class="price-row"><span>Item</span><span class="amount" id="order-item-price">₦0</span></div>
+      <div class="price-row"><span>Qty</span><span id="order-qty-display" style="font-size:0.85rem;color:rgba(15,10,20,0.6)">×1</span></div>
+      <div class="price-row"><span>Delivery Fee</span><span class="amount" id="order-delivery">₦0</span></div>
+      <div class="price-row total"><span>Total</span><span class="amount" id="order-total">₦0</span></div>
+    </div>
+
+    <button class="modal-btn" onclick="submitOrder()">Confirm Order & Pay →</button>
+  </div>
+</div>
+
+<!-- ORDER SUCCESS MODAL -->
+<div class="modal-overlay" id="order-success-overlay" onclick="closeOnOverlay(event,'order-success-overlay')">
+  <div class="modal success-modal">
+    <button class="modal-close" onclick="closeModal('order-success-overlay')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <span class="modal-tag">Order Placed!</span>
+    <h2 class="modal-title">On its way! 🎉</h2>
+    <p class="modal-sub">Your order has been received and will be delivered within 2–5 business days. A confirmation will be sent to your email.</p>
+    <div class="price-summary" style="margin-top:0;text-align:left">
+      <div class="price-row"><span>Order Ref</span><span class="amount" id="order-ref" style="font-size:0.9rem;font-family:'DM Sans',sans-serif">LUM-XXXXX</span></div>
+      <div class="price-row"><span>Product</span><span id="order-success-product" style="font-size:0.85rem">—</span></div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('order-success-overlay')">Done — Keep Shopping</button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="success-overlay" onclick="closeOnOverlay(event,'success-overlay')">
+  <div class="modal success-modal">
+    <button class="modal-close" onclick="closeModal('success-overlay')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <span class="modal-tag">Booking Confirmed</span>
+    <h2 class="modal-title">You're all set! ✨</h2>
+    <p class="modal-sub">Your appointment has been successfully booked. We've sent a confirmation to your email. We look forward to seeing you!</p>
+    <div class="price-summary" style="margin-top:0;text-align:left">
+      <div class="price-row"><span>Booking Ref</span><span class="amount" id="booking-ref" style="font-size:0.9rem;font-family:'DM Sans',sans-serif">LUM-XXXXX</span></div>
+      <div class="price-row"><span>Service</span><span id="success-service" style="font-size:0.85rem">—</span></div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('success-overlay')">Done — Back to Site</button>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  /* ── DATA ── */
+  const services = [
+    {
+      id: 1,
+      name: "Signature Hair Styling",
+      desc: "A complete wash, cut, and blow-dry experience tailored to your hair type and personal aesthetic.",
+      price: 15000,
+      duration: "90 min",
+      icon: `<svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.07-3 2.5 2.5 0 0 1 .3-4.48A2.5 2.5 0 0 1 9.5 2z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.07-3 2.5 2.5 0 0 0-.3-4.48A2.5 2.5 0 0 0 14.5 2z"/></svg>`
+    },
+    {
+      id: 2,
+      name: "Balayage & Color",
+      desc: "Sun-kissed, dimensional color techniques applied by our color specialists for a natural, radiant result.",
+      price: 35000,
+      duration: "3 hrs",
+      icon: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>`
+    },
+    {
+      id: 3,
+      name: "Luxury Facial",
+      desc: "Deep cleansing, exfoliation, and nourishing mask treatment for visibly brighter, smoother skin.",
+      price: 20000,
+      duration: "60 min",
+      icon: `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
+    },
+    {
+      id: 4,
+      name: "Nail Art Studio",
+      desc: "Creative nail designs, gel overlays, and extensions crafted by our expert nail technicians.",
+      price: 8500,
+      duration: "75 min",
+      icon: `<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`
+    }
+  ];
+
+  const testimonials = [
+    { name: "Amara O.", role: "Regular Client", text: "Pharahs is truly a gem. The attention to detail and the atmosphere make every visit a treat. My hair has never looked better!", stars: 5 },
+    { name: "Chidinma E.", role: "Bridal Client", text: "I booked the bridal package and they absolutely exceeded my expectations. I felt like royalty on my wedding day. Highly recommend!", stars: 5 },
+    { name: "Fatima M.", role: "New Client", text: "Found Pharahs online and took a chance — best decision ever. The stylists are knowledgeable, warm, and genuinely talented.", stars: 5 },
+  ];
+
+  /* ── STATE ── */
+  let activeService = null;
+  let serviceFee = 0;
+
+  const feeMap = { lagos: 0, abuja: 3000, ph: 4000, ibadan: 2500, other: 5000 };
+
+  /* ── ITEMS / SHOP DATA ── */
+  const shopItems = [
+    {
+      id: 1,
+      name: "Pharahs Glow Serum",
+      tagline: "Radiance in every drop",
+      badge: "Bestseller",
+      price: 12500,
+      gradient: "linear-gradient(135deg, #3d1a5e 0%, #6b3fa0 100%)",
+      icon: `<svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>`,
+      description: "A lightweight, fast-absorbing vitamin C serum that visibly brightens skin tone, fades dark spots, and restores a luminous, glass-skin effect. Formulated for all skin types including sensitive skin, our serum delivers professional-grade radiance you can see and feel from the first use.",
+      howToUse: "Apply 3–4 drops to clean, dry skin every morning before moisturiser and SPF. Gently pat onto face, neck, and décolleté. For best results, use consistently for 4–6 weeks. Avoid contact with eyes.",
+      ingredients: ["Vitamin C 15%", "Hyaluronic Acid", "Niacinamide", "Ferulic Acid", "Rosehip Oil", "Aloe Vera", "Green Tea Extract"]
+    },
+    {
+      id: 2,
+      name: "Velvet Hair Elixir",
+      tagline: "Salon-smooth, every wash",
+      badge: "New Arrival",
+      price: 9800,
+      gradient: "linear-gradient(135deg, #d4a96a 0%, #b8860b 100%)",
+      icon: `<svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.07-3 2.5 2.5 0 0 1 .3-4.48A2.5 2.5 0 0 1 9.5 2z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.07-3 2.5 2.5 0 0 0-.3-4.48A2.5 2.5 0 0 0 14.5 2z"/></svg>`,
+      description: "An ultra-nourishing hair elixir crafted with rare botanical oils and strengthening proteins to transform dry, brittle, or chemically treated hair. Leaves your strands silky, frizz-free, and brilliantly shiny — exactly as if you just stepped out of our salon. Suitable for all hair textures.",
+      howToUse: "After shampooing, apply a coin-sized amount to damp hair from mid-length to ends. Leave for 2 minutes, then rinse thoroughly. For a deep treatment, apply to dry hair, cover with a warm towel, leave for 20 minutes, then wash out. Use 2–3 times per week.",
+      ingredients: ["Argan Oil", "Keratin Complex", "Castor Oil", "Shea Butter", "Biotin", "Silk Proteins", "Baobab Extract", "Vitamin E"]
+    }
+  ];
+
+  let activeItem = null;
+  const deliveryFees = { lagos: 1500, abuja: 2500, ph: 3000, ibadan: 2000, other: 3500 };
+
+  /* ── RENDER ITEMS ── */
+  function renderItems() {
+    const grid = document.getElementById('items-grid');
+    grid.innerHTML = shopItems.map(item => `
+      <div class="item-card" onclick="openItemDetail(${item.id})">
+        <div class="item-img">
+          <div class="item-img-bg" style="background:${item.gradient};position:absolute;inset:0"></div>
+          <span class="item-badge">${item.badge}</span>
+          <div class="item-img-icon">${item.icon}</div>
+        </div>
+        <div class="item-body">
+          <div class="item-name">${item.name}</div>
+          <div class="item-tagline">${item.tagline}</div>
+          <div class="item-footer">
+            <div class="item-price">₦${item.price.toLocaleString()} <span>/ bottle</span></div>
+            <button class="item-view-btn">View Details</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* ── ITEM DETAIL ── */
+  function openItemDetail(itemId) {
+    activeItem = shopItems.find(i => i.id === itemId);
+    document.getElementById('item-detail-header-bg').style.background = activeItem.gradient;
+    document.getElementById('item-detail-header-icon').innerHTML = activeItem.icon;
+    document.getElementById('item-detail-badge').textContent = activeItem.badge;
+    document.getElementById('item-detail-name').textContent = activeItem.name;
+    document.getElementById('item-detail-tagline').textContent = activeItem.tagline;
+    document.getElementById('item-detail-desc').textContent = activeItem.description;
+    document.getElementById('item-detail-how').textContent = activeItem.howToUse;
+    document.getElementById('item-detail-ingredients').innerHTML = activeItem.ingredients.map(i => `<span class="ingredient-tag">${i}</span>`).join('');
+    document.getElementById('item-detail-price').textContent = '₦' + activeItem.price.toLocaleString();
+    document.getElementById('item-detail-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openOrderModal() {
+    closeModal('item-detail-overlay');
+    document.getElementById('order-product-name').textContent = activeItem.name;
+    document.getElementById('order-item-price').textContent = '₦' + activeItem.price.toLocaleString();
+    document.getElementById('order-qty').value = 1;
+    document.getElementById('order-state').value = '';
+    updateOrderTotal();
+    document.getElementById('order-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateOrderTotal() {
+    const qty = parseInt(document.getElementById('order-qty').value) || 1;
+    const state = document.getElementById('order-state').value;
+    const delivery = deliveryFees[state] || 0;
+    const subtotal = (activeItem?.price || 0) * qty;
+    const total = subtotal + delivery;
+    document.getElementById('order-qty-display').textContent = '×' + qty;
+    document.getElementById('order-delivery').textContent = '₦' + delivery.toLocaleString();
+    document.getElementById('order-total').textContent = '₦' + total.toLocaleString();
+  }
+
+  function submitOrder() {
+    const name = document.getElementById('order-name').value;
+    const phone = document.getElementById('order-phone').value;
+    const address = document.getElementById('order-address').value;
+    if (!name || !phone || !address) {
+      if (!name) document.getElementById('order-name').focus();
+      else if (!phone) document.getElementById('order-phone').focus();
+      else document.getElementById('order-address').focus();
+      return;
+    }
+    closeModal('order-overlay');
+    setTimeout(() => {
+      const ref = 'LUM-' + Math.random().toString(36).substring(2,8).toUpperCase();
+      document.getElementById('order-ref').textContent = ref;
+      document.getElementById('order-success-product').textContent = activeItem?.name;
+      document.getElementById('order-success-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }, 300);
+  }
+
+  /* ── RENDER SERVICES ── */
+    const grid = document.getElementById('services-grid');{
+    grid.innerHTML = services.map(s => `
+      <div class="service-card" onclick="openBookingModal(${s.id})">
+        <div class="service-icon">${s.icon}</div>
+        <div class="service-name">${s.name}</div>
+        <div class="service-desc">${s.desc}</div>
+        <div class="service-meta">
+          <div class="service-meta-item">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            ${s.duration}
+          </div>
+          <div class="service-meta-item">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            On-site / Home
+          </div>
+        </div>
+        <div class="service-footer">
+          <div class="service-price">₦${s.price.toLocaleString()} <span>/ session</span></div>
+          <button class="book-btn">Book →</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderTestimonials() {
+    const grid = document.getElementById('testi-grid');
+    grid.innerHTML = testimonials.map(t => `
+      <div class="testi-card">
+        <div class="stars">${'<span>★</span>'.repeat(t.stars)}</div>
+        <div class="testi-text">"${t.text}"</div>
+        <div class="testi-author">
+          <div class="avatar">${t.name[0]}</div>
+          <div>
+            <div class="author-name">${t.name}</div>
+            <div class="author-role">${t.role}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* ── MODALS ── */
+  function openBookingModal(serviceId) {
+    activeService = serviceId ? services.find(s => s.id === serviceId) : services[0];
+    document.getElementById('booking-service-name').textContent = activeService.name;
+    document.getElementById('booking-service-desc').textContent = activeService.desc;
+    document.getElementById('summary-base').textContent = '₦' + activeService.price.toLocaleString();
+    updateFee();
+    document.getElementById('booking-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateFee() {
+    const state = document.getElementById('field-state').value;
+    serviceFee = feeMap[state] || 0;
+    document.getElementById('summary-fee').textContent = '₦' + serviceFee.toLocaleString();
+    const total = (activeService?.price || 0) + serviceFee;
+    document.getElementById('summary-total').textContent = '₦' + total.toLocaleString();
+  }
+
+  function proceedToCheckout() {
+    const name = document.getElementById('field-name').value;
+    if (!name) { document.getElementById('field-name').focus(); return; }
+    closeModal('booking-overlay');
+    const total = (activeService?.price || 0) + serviceFee;
+    document.getElementById('co-service').textContent = activeService.name;
+    document.getElementById('co-base').textContent = '₦' + activeService.price.toLocaleString();
+    document.getElementById('co-fee').textContent = '₦' + serviceFee.toLocaleString();
+    document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
+    document.getElementById('co-pay-amount').textContent = '₦' + total.toLocaleString();
+    document.getElementById('checkout-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function processPayment() {
+    // Simulate Paystack payment
+    closeModal('checkout-overlay');
+    setTimeout(() => {
+      const ref = 'LUM-' + Math.random().toString(36).substring(2,8).toUpperCase();
+      document.getElementById('booking-ref').textContent = ref;
+      document.getElementById('success-service').textContent = activeService?.name;
+      document.getElementById('success-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }, 300);
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeOnOverlay(e, id) {
+    if (e.target.id === id) closeModal(id);
+  }
+
+  /* ── NAV SCROLL ── */
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  /* Set min date for date picker */
+  const dateField = document.getElementById('field-date');
+  if (dateField) dateField.min = new Date().toISOString().split('T')[0];
+
+  /* ── INIT ── */
+  renderServices();
+  renderTestimonials();
+  renderItems();
+</script>
+</body>
+</html>
