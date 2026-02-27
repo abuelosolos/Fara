@@ -214,6 +214,83 @@
   @media (max-width: 480px) {
     .stats { grid-template-columns: 1fr 1fr; }
   }
+
+  .tab-btn {
+    background: transparent; color: rgba(15,10,20,0.5);
+    border: 1.5px solid rgba(107,63,160,0.15); cursor: pointer;
+    font-family: "DM Sans", sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.5rem 1.1rem; border-radius: 2rem; transition: all 0.2s;
+  }
+  .tab-btn.active, .tab-btn:hover { background: var(--plum); color: #fff; border-color: var(--plum); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .date-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1rem; margin-top:1rem; }
+  .date-card {
+    background: #fff; border: 1px solid rgba(107,63,160,0.1);
+    border-radius: 1rem; padding: 1.2rem 1.4rem;
+  }
+  .date-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+  .date-label { font-weight: 500; font-size: 0.95rem; color: var(--ink); }
+  .date-del-btn {
+    background: #fff0f0; color: var(--red); border: none; cursor: pointer;
+    font-size: 0.7rem; padding: 0.3rem 0.7rem; border-radius: 2rem;
+    font-family: "DM Sans", sans-serif; letter-spacing: 0.08em;
+  }
+  .date-del-btn:hover { background: var(--red); color: #fff; }
+  .slot-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .slot-tag {
+    background: var(--mist); color: var(--violet);
+    font-size: 0.72rem; padding: 0.25rem 0.65rem; border-radius: 2rem; letter-spacing: 0.05em;
+  }
+  .add-date-form {
+    background: #fff; border: 1px solid rgba(107,63,160,0.1);
+    border-radius: 1rem; padding: 1.4rem 1.6rem; margin-bottom: 1.5rem;
+  }
+  .add-date-title { font-family: "Cormorant Garamond", serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem; }
+  .slots-input-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .slot-input-tag {
+    display: flex; align-items: center; gap: 0.3rem;
+    background: var(--mist); border-radius: 2rem; padding: 0.3rem 0.4rem 0.3rem 0.75rem;
+    font-size: 0.8rem; color: var(--violet);
+  }
+  .slot-remove { background: none; border: none; cursor: pointer; color: var(--violet); font-size: 1rem; line-height: 1; padding: 0; }
+  .booking-status-pending   { background: #eff6ff; color: #1d4ed8; }
+
+  /* Search bar */
+  .search-bar {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  .search-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    stroke: rgba(15,10,20,0.35);
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    padding: 0.7rem 1rem 0.7rem 2.4rem;
+    border: 1.5px solid rgba(107,63,160,0.15);
+    border-radius: 0.75rem;
+    font-size: 0.88rem;
+    color: var(--ink);
+    background: var(--mist);
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--violet); background: #fff; }
+  .search-input::placeholder { color: rgba(15,10,20,0.35); }
+  .booking-status-confirmed { background: #f0fdf4; color: var(--green); }
+  .booking-status-cancelled { background: #fff0f0; color: var(--red); }
+  .booking-status-completed { background: #faf5ff; color: var(--violet); }
 </style>
 </head>
 <body>
@@ -236,12 +313,17 @@
       <div class="header-logo">Pharahs <span>Admin Panel</span></div>
     </div>
     <div class="header-right">
-      <button class="refresh-btn" onclick="loadOrders()">↻ Refresh</button>
+      <button class="tab-btn active" id="tab-orders" onclick="switchTab('orders')">Orders</button>
+      <button class="tab-btn" id="tab-bookings" onclick="switchTab('bookings')">Bookings</button>
+      <button class="tab-btn" id="tab-dates" onclick="switchTab('dates')">Availability</button>
+      <button class="refresh-btn" onclick="refreshCurrent()">↻ Refresh</button>
       <button class="logout-btn" onclick="logout()">Log Out</button>
     </div>
   </header>
 
   <main>
+    <!-- ORDERS TAB -->
+    <div class="tab-panel active" id="panel-orders">
     <!-- Stats -->
     <div class="stats">
       <div class="stat-card">
@@ -262,6 +344,12 @@
       </div>
     </div>
 
+    <!-- Search -->
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" type="text" id="orders-search" placeholder="Search by name or reference ID..." oninput="renderOrders()">
+    </div>
+
     <!-- Filters -->
     <div class="filters">
       <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
@@ -277,6 +365,93 @@
       <div class="orders-count" id="orders-count"></div>
     </div>
     <div id="orders-list"><div class="loading">Loading orders...</div></div>
+    </div><!-- end orders panel -->
+
+    <!-- BOOKINGS TAB -->
+    <div class="tab-panel" id="panel-bookings">
+      <div class="orders-header">
+        <div class="orders-title">Appointments</div>
+        <div class="orders-count" id="bookings-count"></div>
+      </div>
+      <!-- Search -->
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" type="text" id="bookings-search" placeholder="Search by name or reference ID..." oninput="renderBookings()">
+      </div>
+      <div class="filters">
+        <button class="filter-btn active" onclick="setBookingFilter('all',this)">All</button>
+        <button class="filter-btn" onclick="setBookingFilter('pending',this)">⏳ Pending</button>
+        <button class="filter-btn" onclick="setBookingFilter('confirmed',this)">Confirmed</button>
+        <button class="filter-btn" onclick="setBookingFilter('completed',this)">Completed</button>
+        <button class="filter-btn" onclick="setBookingFilter('cancelled',this)">Cancelled</button>
+      </div>
+      <div id="bookings-list"><div class="loading">Loading bookings...</div></div>
+    </div><!-- end bookings panel -->
+
+    <!-- AVAILABILITY TAB -->
+    <div class="tab-panel" id="panel-dates">
+
+      <!-- Service Durations -->
+      <div class="add-date-form">
+        <div class="add-date-title">Service Durations</div>
+        <p style="font-size:0.82rem;color:rgba(15,10,20,0.5);margin:0 0 1rem;">
+          Change a duration here and slot blocking updates automatically — no restart needed.
+        </p>
+        <div id="durations-list" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
+      </div>
+
+      <!-- Default slots card -->
+      <div class="add-date-form">
+        <div class="add-date-title">Default Time Slots</div>
+        <p style="font-size:0.82rem;color:rgba(15,10,20,0.5);margin:0 0 1rem;">These slots apply to every day unless you override a specific date below.</p>
+        <div class="slots-input-row" id="default-slots-display"></div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+          <input class="form-input" type="text" id="default-slot-input" placeholder="e.g. 6:00 PM" style="flex:1" onkeydown="if(event.key==='Enter')addDefaultSlot()">
+          <button class="modal-btn" onclick="addDefaultSlot()" style="width:auto;padding:0.7rem 1.2rem;">+ Add</button>
+        </div>
+        <button class="modal-btn" onclick="saveDefaultSlots()" style="margin-top:0.75rem;">Save Default Slots →</button>
+      </div>
+
+      <!-- Block / override a specific day -->
+      <div class="add-date-form">
+        <div class="add-date-title">Block or Override a Day</div>
+        <div class="form-group">
+          <label class="form-label">Select Date</label>
+          <input class="form-input" type="date" id="override-date-input" onchange="loadOverrideForDate()">
+        </div>
+        <div id="override-status" style="font-size:0.82rem;color:rgba(15,10,20,0.5);margin-bottom:1rem;"></div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button class="action-btn btn-delay" onclick="blockDay()">🚫 Block Entire Day</button>
+          <button class="action-btn btn-dispatch" onclick="openEditSlots()">✏️ Edit Slots for This Day</button>
+          <button class="action-btn btn-deliver" onclick="unblockDay()">↺ Reset to Default</button>
+        </div>
+      </div>
+
+      <!-- Blocked/overridden days list -->
+      <div class="orders-header">
+        <div class="orders-title">Blocked & Custom Days</div>
+        <div style="font-size:0.8rem;color:rgba(15,10,20,0.4);">All other days use default slots</div>
+      </div>
+      <div class="date-grid" id="overrides-grid"><div class="loading">Loading...</div></div>
+    </div><!-- end dates panel -->
+
+    <!-- EDIT SLOTS MODAL -->
+    <div class="modal-overlay" id="edit-slots-modal" onclick="closeModalOnOverlay(event,'edit-slots-modal')">
+      <div class="modal">
+        <button class="modal-close-btn" onclick="closeModal('edit-slots-modal')">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <h3 class="modal-title">Edit Slots</h3>
+        <p class="modal-sub" id="edit-slots-date-label">Custom slots for this date</p>
+        <div class="slots-input-row" id="edit-slots-preview" style="margin-bottom:0.75rem;"></div>
+        <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+          <input class="form-input" type="text" id="edit-slot-input" placeholder="e.g. 10:30 AM" style="flex:1" onkeydown="if(event.key='Enter')addEditSlot()">
+          <button class="modal-btn" onclick="addEditSlot()" style="width:auto;padding:0.7rem 1.2rem;">+ Add</button>
+        </div>
+        <button class="modal-btn" onclick="saveEditSlots()">Save Slots for This Day →</button>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -410,7 +585,16 @@
 
   /* ── RENDER ── */
   function renderOrders() {
-    const filtered = activeFilter === 'all' ? allOrders : allOrders.filter(o => o.status === activeFilter);
+    const query = (document.getElementById('orders-search')?.value || '').toLowerCase().trim();
+    const statusFiltered = activeFilter === 'all' ? allOrders : allOrders.filter(o => o.status === activeFilter);
+    const filtered = query
+      ? statusFiltered.filter(o =>
+          (o.name || '').toLowerCase().includes(query) ||
+          (o.reference || '').toLowerCase().includes(query) ||
+          (o.email || '').toLowerCase().includes(query) ||
+          (o.phone || '').toLowerCase().includes(query)
+        )
+      : statusFiltered;
     document.getElementById('orders-count').textContent = `${filtered.length} order${filtered.length !== 1 ? 's' : ''}`;
 
     if (!filtered.length) {
@@ -539,6 +723,346 @@
     t.textContent = msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ── TABS ── */
+  let currentTab = 'orders';
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + tab).classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    if (tab === 'bookings') loadBookings();
+    if (tab === 'dates') { loadAvailableDates(); loadServiceDurations(); }
+  }
+
+  function refreshCurrent() {
+    if (currentTab === 'orders') loadOrders();
+    if (currentTab === 'bookings') loadBookings();
+    if (currentTab === 'dates') loadAvailableDates();
+  }
+
+  /* ── BOOKINGS ── */
+  let allBookings = [];
+  let activeBookingFilter = 'all';
+
+  async function loadBookings() {
+    try {
+      const res = await fetch(`${BACKEND}/admin/bookings`, {
+        headers: { 'x-admin-password': adminPassword }
+      });
+      const data = await res.json();
+      allBookings = data.bookings || [];
+      renderBookings();
+    } catch (err) {
+      showToast('❌ Could not load bookings');
+    }
+  }
+
+  function setBookingFilter(filter, btn) {
+    activeBookingFilter = filter;
+    document.querySelectorAll('#panel-bookings .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderBookings();
+  }
+
+  function renderBookings() {
+    const query = (document.getElementById('bookings-search')?.value || '').toLowerCase().trim();
+    const statusFiltered = activeBookingFilter === 'all' ? allBookings : allBookings.filter(b => b.status === activeBookingFilter);
+    const filtered = query
+      ? statusFiltered.filter(b =>
+          (b.name || '').toLowerCase().includes(query) ||
+          (b.reference || '').toLowerCase().includes(query) ||
+          (b.email || '').toLowerCase().includes(query) ||
+          (b.phone || '').toLowerCase().includes(query)
+        )
+      : statusFiltered;
+    document.getElementById('bookings-count').textContent = `${filtered.length} booking${filtered.length !== 1 ? 's' : ''}`;
+    if (!filtered.length) {
+      document.getElementById('bookings-list').innerHTML = '<div class="empty-state"><div style="font-size:2rem;">📅</div><p>No bookings yet.</p></div>';
+      return;
+    }
+    document.getElementById('bookings-list').innerHTML = filtered.map(b => {
+      const created = new Date(b.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+      const apptDate = new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+      return `
+        <div class="order-card">
+          <div class="order-top">
+            <div>
+              <div class="order-ref">${b.reference}</div>
+              <div class="order-name">${b.name}</div>
+              <div class="order-date">Booked ${created} · ${b.email}</div>
+            </div>
+            <span class="status-badge booking-status-${b.status}">${b.status}</span>
+          </div>
+          <div class="order-details">
+            <div class="order-detail"><strong>${b.service}</strong>Service</div>
+            <div class="order-detail"><strong>${apptDate}</strong>Date</div>
+            <div class="order-detail"><strong>${b.time}${b.endTime ? ' – ' + b.endTime : ''}</strong>Time</div>
+            <div class="order-detail"><strong>${b.duration || '—'}</strong>Duration</div>
+            <div class="order-detail"><strong>${b.phone}</strong>Phone</div>
+            <div class="order-detail"><strong>₦${b.total.toLocaleString()}</strong>Total</div>
+            <div class="order-detail"><strong>${b.paymentMethod === 'after' ? '🤝 Pay After' : '💳 Paid'}</strong>Payment</div>
+            <div class="order-detail"><strong>${b.address}</strong>Address</div>
+          </div>
+          <div class="order-actions">
+            ${b.status === 'pending' ? `
+              <button class="action-btn btn-dispatch" onclick="updateBookingStatus('${b.reference}','confirmed')">✅ Confirm Booking</button>
+              <button class="action-btn btn-delay" onclick="updateBookingStatus('${b.reference}','cancelled')">✕ Cancel</button>
+            ` : b.status === 'confirmed' ? `
+              <button class="action-btn btn-deliver" onclick="updateBookingStatus('${b.reference}','completed')">🎉 Mark Complete</button>
+              <button class="action-btn btn-delay" onclick="updateBookingStatus('${b.reference}','cancelled')">✕ Cancel & Free Slot</button>
+            ` : `
+              <span class="action-btn btn-disabled">${b.status === 'completed' ? '🎉 Completed' : '✕ Cancelled — Slot Reopened'}</span>
+            `}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  async function updateBookingStatus(reference, status) {
+    try {
+      const res = await fetch(`${BACKEND}/admin/update-booking`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ reference, status })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const idx = allBookings.findIndex(b => b.reference === reference);
+        if (idx !== -1) allBookings[idx] = data.booking;
+        renderBookings();
+        showToast('✅ Booking updated!');
+      }
+    } catch (err) {
+      showToast('❌ Could not update booking');
+    }
+  }
+
+  /* ── AVAILABILITY ── */
+  let defaultSlots = [];
+  let editSlots = [];
+  let editDate = '';
+
+  /* ── SERVICE DURATIONS ── */
+  async function loadServiceDurations() {
+    try {
+      const res  = await fetch(`${BACKEND}/booking/service-durations`);
+      const data = await res.json();
+      renderDurations(data.durations || {});
+    } catch (err) {
+      showToast('❌ Could not load durations');
+    }
+  }
+
+  function renderDurations(durations) {
+    document.getElementById('durations-list').innerHTML = Object.entries(durations).map(([name, mins]) => `
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <span style="flex:1;font-size:0.9rem;color:var(--ink);">${name}</span>
+        <input class="form-input" type="number" value="${mins}" min="15" step="15"
+          style="width:90px;text-align:center;"
+          id="dur-${name.replace(/\s+/g,'-')}"
+          onchange="saveDuration('${name}', this.value)">
+        <span style="font-size:0.8rem;color:rgba(15,10,20,0.4);">mins</span>
+        <span style="font-size:0.75rem;color:rgba(15,10,20,0.35);">(${Math.floor(mins/60)}h ${mins%60 ? mins%60+'m' : ''})</span>
+      </div>
+    `).join('');
+  }
+
+  async function saveDuration(service, minutes) {
+    try {
+      const res = await fetch(`${BACKEND}/admin/set-service-duration`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ service, minutes: parseInt(minutes) })
+      });
+      const data = await res.json();
+      if (data.success) {
+        renderDurations(data.durations);
+        showToast(`✅ ${service} updated to ${minutes} mins`);
+      }
+    } catch (err) {
+      showToast('❌ Could not update duration');
+    }
+  }
+
+  async function loadAvailableDates() {
+    try {
+      const res = await fetch(`${BACKEND}/admin/overrides`, {
+        headers: { 'x-admin-password': adminPassword }
+      });
+      const data = await res.json();
+      defaultSlots = data.defaultSlots || [];
+      renderDefaultSlots();
+      renderOverrides(data.overrides || []);
+    } catch (err) {
+      showToast('❌ Could not load availability');
+    }
+  }
+
+  function renderDefaultSlots() {
+    document.getElementById('default-slots-display').innerHTML = defaultSlots.map(s => `
+      <div class="slot-input-tag">${s}<button class="slot-remove" onclick="removeDefaultSlot('${s}')">×</button></div>
+    `).join('');
+  }
+
+  function addDefaultSlot() {
+    const input = document.getElementById('default-slot-input');
+    const val = input.value.trim();
+    if (!val || defaultSlots.includes(val)) { input.focus(); return; }
+    defaultSlots.push(val);
+    renderDefaultSlots();
+    input.value = '';
+    input.focus();
+  }
+
+  function removeDefaultSlot(slot) {
+    defaultSlots = defaultSlots.filter(s => s !== slot);
+    renderDefaultSlots();
+  }
+
+  async function saveDefaultSlots() {
+    if (!defaultSlots.length) { showToast('Add at least one slot'); return; }
+    try {
+      const res = await fetch(`${BACKEND}/admin/set-default-slots`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ slots: defaultSlots })
+      });
+      const data = await res.json();
+      if (data.success) showToast('✅ Default slots saved!');
+    } catch (err) {
+      showToast('❌ Could not save default slots');
+    }
+  }
+
+  function renderOverrides(overrides) {
+    if (!overrides.length) {
+      document.getElementById('overrides-grid').innerHTML = '<div class="empty-state"><div style="font-size:2rem;">✅</div><p>No blocked or custom days. All days use default slots.</p></div>';
+      return;
+    }
+    document.getElementById('overrides-grid').innerHTML = overrides.map(o => {
+      const label = new Date(o.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+      return `
+        <div class="date-card">
+          <div class="date-card-top">
+            <div class="date-label">${label}</div>
+            <button class="date-del-btn" onclick="resetDay('${o.date}')">↺ Reset</button>
+          </div>
+          ${o.blocked
+            ? '<div style="font-size:0.8rem;color:var(--red);font-weight:500;">🚫 Blocked — fully unavailable</div>'
+            : `<div style="font-size:0.75rem;color:rgba(15,10,20,0.4);margin-bottom:0.5rem;">Custom slots:</div>
+               <div class="slot-list">${(o.slots||[]).map(s => `<span class="slot-tag">${s}</span>`).join('')}</div>`
+          }
+        </div>`;
+    }).join('');
+  }
+
+  async function loadOverrideForDate() {
+    const date = document.getElementById('override-date-input').value;
+    if (!date) return;
+    try {
+      const res = await fetch(`${BACKEND}/admin/overrides`, {
+        headers: { 'x-admin-password': adminPassword }
+      });
+      const data = await res.json();
+      const override = (data.overrides || []).find(o => o.date === date);
+      const statusEl = document.getElementById('override-status');
+      if (!override) statusEl.textContent = '✅ Using default slots';
+      else if (override.blocked) statusEl.textContent = '🚫 This day is fully blocked';
+      else statusEl.textContent = `✏️ Custom slots: ${(override.slots||[]).join(', ')}`;
+    } catch (err) {}
+  }
+
+  async function blockDay() {
+    const date = document.getElementById('override-date-input').value;
+    if (!date) { showToast('Select a date first'); return; }
+    try {
+      const res = await fetch(`${BACKEND}/admin/block-day`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ date })
+      });
+      const data = await res.json();
+      if (data.success) { loadAvailableDates(); loadOverrideForDate(); showToast('✅ Day blocked!'); }
+    } catch (err) { showToast('❌ Could not block day'); }
+  }
+
+  async function unblockDay() {
+    const date = document.getElementById('override-date-input').value;
+    if (!date) { showToast('Select a date first'); return; }
+    try {
+      const res = await fetch(`${BACKEND}/admin/unblock-day`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ date })
+      });
+      const data = await res.json();
+      if (data.success) { loadAvailableDates(); loadOverrideForDate(); showToast('✅ Day reset to default!'); }
+    } catch (err) { showToast('❌ Could not reset day'); }
+  }
+
+  async function resetDay(date) {
+    try {
+      const res = await fetch(`${BACKEND}/admin/reset-day`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ date })
+      });
+      const data = await res.json();
+      if (data.success) { loadAvailableDates(); showToast('✅ Day reset to default!'); }
+    } catch (err) { showToast('❌ Could not reset'); }
+  }
+
+  function openEditSlots() {
+    const date = document.getElementById('override-date-input').value;
+    if (!date) { showToast('Select a date first'); return; }
+    editDate = date;
+    const label = new Date(date + 'T00:00:00').toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    document.getElementById('edit-slots-date-label').textContent = label;
+    editSlots = [...defaultSlots];
+    renderEditSlots();
+    openModal('edit-slots-modal');
+  }
+
+  function addEditSlot() {
+    const input = document.getElementById('edit-slot-input');
+    const val = input.value.trim();
+    if (!val || editSlots.includes(val)) { input.focus(); return; }
+    editSlots.push(val);
+    renderEditSlots();
+    input.value = '';
+    input.focus();
+  }
+
+  function removeEditSlot(slot) {
+    editSlots = editSlots.filter(s => s !== slot);
+    renderEditSlots();
+  }
+
+  function renderEditSlots() {
+    document.getElementById('edit-slots-preview').innerHTML = editSlots.map(s => `
+      <div class="slot-input-tag">${s}<button class="slot-remove" onclick="removeEditSlot('${s}')">×</button></div>
+    `).join('');
+  }
+
+  async function saveEditSlots() {
+    if (!editSlots.length) { showToast('Add at least one slot'); return; }
+    try {
+      const res = await fetch(`${BACKEND}/admin/set-slots`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ date: editDate, slots: editSlots })
+      });
+      const data = await res.json();
+      if (data.success) {
+        closeModal('edit-slots-modal');
+        loadAvailableDates();
+        loadOverrideForDate();
+        showToast('✅ Custom slots saved!');
+      }
+    } catch (err) { showToast('❌ Could not save slots'); }
   }
 </script>
 </body>
