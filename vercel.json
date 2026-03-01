@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/salon-website.html" },
+    { "source": "/(.*)", "destination": "/salon-website.html" }
+  ]
+}
