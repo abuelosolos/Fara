@@ -71,10 +71,15 @@ const DEFAULT_SLOTS = ['9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:0
    Format: minutes as a number.
 */
 const SERVICE_DURATIONS = {
-  'Signature Hair Styling': 90,
-  'Balayage & Color':       180,
-  'Luxury Facial':          60,
-  'Nail Art Studio':        75,
+  'Hair Grooming':            120,
+  'Retouching':               150,
+  'Hair Breakage Treatment':  180,
+  'Dandruff Treatment':       130,
+  'Braiding — Large':         240,
+  'Braiding — Medium':        180,
+  'Braiding — Small':         120,
+  'Wig Revamp':               120,
+  'Wig Installation':         90,
 };
 
 // Resolve duration in minutes for a booking
