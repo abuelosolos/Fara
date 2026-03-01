@@ -669,8 +669,8 @@
   <a href="#" class="logo">Pha<span>rahs</span></a>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
-    <li><a href="#shop">Shop</a></li>
     <li><a href="#about">About</a></li>
+    <li><a href="#shop">Shop</a></li>
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -846,7 +846,7 @@
           </li>
           <li>
             <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ef6fbf2f2f1def2ebf3f7fbecfbedfff2f1f0b0fdf1f3"><span class="__cf_email__" data-cfemail="e28083838e87808396dad0a2858f838b8ecc818d8f">baalebat82@gmail.com</span></a>
+            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ef6fbf2f2f1def2ebf3f7fbecfbedfff2f1f0b0fdf1f3"><span class="__cf_email__" data-cfemail="e28083838e87808396dad0a2858f838b8ecc818d8f">[email&#160;protected]</span></a>
           </li>
           <li>
             <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -921,7 +921,7 @@
       <div class="price-row"><span>Service</span><span class="amount" id="summary-base">₦0</span></div>
       <div class="price-row total"><span>Total</span><span class="amount" id="summary-total">₦0</span></div>
     </div>
-    <button class="modal-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+    <button class="modal-btn" onclick="proceedToCheckout()">Proceed to Checkout →</button>
   </div>
 </div>
 
@@ -1072,7 +1072,7 @@
       <div class="price-row"><span>Order Ref</span><span class="amount" id="order-ref" style="font-size:0.9rem;font-family:'DM Sans',sans-serif">LUM-XXXXX</span></div>
       <div class="price-row"><span>Product</span><span id="order-success-product" style="font-size:0.85rem">—</span></div>
     </div>
-    <button class="modal-btn" onclick="closeModal('order-success-overlay')">Done</button>
+    <button class="modal-btn" onclick="closeModal('order-success-overlay')">Done — Keep Shopping</button>
   </div>
 </div>
 
@@ -1092,7 +1092,7 @@
       <div class="price-row"><span>Booking Ref</span><span class="amount" id="booking-ref" style="font-size:0.9rem;font-family:'DM Sans',sans-serif">LUM-XXXXX</span></div>
       <div class="price-row"><span>Service</span><span id="success-service" style="font-size:0.85rem">—</span></div>
     </div>
-    <button class="modal-btn" onclick="closeModal('success-overlay')">Done</button>
+    <button class="modal-btn" onclick="closeModal('success-overlay')">Done — Back to Site</button>
   </div>
 </div>
 
@@ -1139,6 +1139,11 @@
     { name: "Fatima M.", role: "New Client", text: "Found Pharahs online and took a chance — best decision ever. The stylists are knowledgeable, warm, and genuinely talented.", stars: 5 },
   ];
 
+  /* ── BACKEND URL — auto-switches between local and live ── */
+  const BACKEND = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    fara-production.up.railway.app // ← replace with your Railway URL
+
   /* ── STATE ── */
   let activeService = null;
 
@@ -1167,8 +1172,8 @@
       ingredients: ["Argan Oil", "Keratin Complex", "Castor Oil", "Shea Butter", "Biotin", "Silk Proteins", "Baobab Extract", "Vitamin E"]
     },
     {
-      id: 3,
-      name: "Hair Growth Oil",
+      id: 2,
+      name: "Hair Charm",
       tagline: "Salon-smooth, every wash",
       badge: "New Arrival",
       price: 9500,
@@ -1287,7 +1292,7 @@
   async function verifyPaymentAndNotify(reference, orderDetails) {
     closeModal('order-overlay');
     try {
-      const res = await fetch('http://localhost:3000/verify-payment', {
+      const res = await fetch(`${BACKEND}/verify-payment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1332,12 +1337,12 @@
           </div>
           <div class="service-meta-item">
             <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            On Site
+            On-site / Home
           </div>
         </div>
         <div class="service-footer">
           <div class="service-price">₦${s.price.toLocaleString()} <span>/ session</span></div>
-          <button class="book-btn">Book</button>
+          <button class="book-btn">Book →</button>
         </div>
       </div>
     `).join('');
@@ -1367,7 +1372,7 @@
   // Fetch live service durations from backend
   async function fetchServiceDurations() {
     try {
-      const res  = await fetch('http://localhost:3000/booking/service-durations');
+      const res  = await fetch(`${BACKEND}/booking/service-durations`);
       const data = await res.json();
       if (data.success) liveDurations = data.durations;
     } catch (err) { /* use fallback */ }
@@ -1391,7 +1396,7 @@
       const now        = new Date();
       const localMins  = now.getHours() * 60 + now.getMinutes();
       const localDate  = now.toLocaleDateString('en-CA'); // YYYY-MM-DD in local tz
-      const res  = await fetch(`http://localhost:3000/booking/available-dates?localMins=${localMins}&localDate=${localDate}`);
+      const res  = await fetch(`${BACKEND}/booking/available-dates?localMins=${localMins}&localDate=${localDate}`);
       const data = await res.json();
       availableDates = data.dates || [];
       const sel = document.getElementById('field-date');
@@ -1575,7 +1580,7 @@
   async function submitBooking(reference, bookingDetails, method) {
     closeModal('checkout-overlay');
     try {
-      const res = await fetch('http://localhost:3000/booking/create', {
+      const res = await fetch(`${BACKEND}/booking/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reference, bookingDetails, paymentMethod: method })
