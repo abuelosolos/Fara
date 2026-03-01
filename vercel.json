@@ -6,7 +6,7 @@
     { "src": "images/**", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/admin.html", "dest": "/admin.html" },
+    { "src": "/images/(.*)", "dest": "/images/$1" },
     { "src": "/admin", "dest": "/admin.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
