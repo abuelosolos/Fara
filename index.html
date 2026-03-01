@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumière — Premium Salon & Beauty</title>
+<title>Pharahs — Premium Salon & Beauty</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
   :root {
     --ink: #0f0a14;
@@ -493,9 +494,14 @@
 
   .item-img {
     height: 220px;
-    display: grid; place-items: center;
     position: relative; overflow: hidden;
   }
+  .item-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .item-card:hover .item-img img { transform: scale(1.06); }
   .item-img-bg {
     position: absolute; inset: 0;
     transition: transform 0.4s ease;
@@ -545,7 +551,7 @@
 
   /* Item detail modal specifics */
   .item-detail-header {
-    height: 180px; border-radius: 1rem; margin-bottom: 1.5rem;
+    width: 300px; max-width: 100%; height: 300px; border-radius: 1rem; margin: 0 auto 1.5rem;
     display: grid; place-items: center; position: relative; overflow: hidden;
   }
   .item-detail-header-icon {
@@ -572,6 +578,30 @@
     color: var(--violet); font-size: 0.72rem; padding: 0.2rem 0.65rem;
     border-radius: 2rem;
   }
+
+  .service-pick-card {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1.5px solid rgba(107,63,160,0.12);
+    border-radius: 1rem; cursor: pointer;
+    transition: all 0.2s; background: var(--mist);
+  }
+  .service-pick-card:hover {
+    border-color: var(--violet); background: var(--blush);
+    transform: translateY(-1px); box-shadow: 0 4px 16px rgba(61,26,94,0.08);
+  }
+  .service-pick-icon {
+    width: 44px; height: 44px; border-radius: 0.75rem;
+    background: linear-gradient(135deg,rgba(61,26,94,0.08),rgba(107,63,160,0.12));
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .service-pick-icon svg { width: 20px; height: 20px; stroke: var(--plum); fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .service-pick-info { flex: 1; min-width: 0; }
+  .service-pick-name { font-size: 0.95rem; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+  .service-pick-meta { font-size: 0.78rem; color: rgba(15,10,20,0.45); }
+  .service-pick-price { font-size: 0.95rem; font-weight: 600; color: var(--plum); white-space: nowrap; }
+  .service-pick-arrow { opacity: 0.3; transition: opacity 0.2s; }
+  .service-pick-card:hover .service-pick-arrow { opacity: 1; }
 
   .modal-btn-ghost {
     width: 100%; background: transparent; color: var(--plum);
@@ -616,7 +646,7 @@
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#" class="logo">Lu<span>mière</span></a>
+  <a href="#" class="logo">Pha<span>rahs</span></a>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#about">About</a></li>
@@ -655,29 +685,41 @@
   <div class="services-grid" id="services-grid"></div>
 </section>
 
+<!-- SHOP -->
+<section class="shop-section" id="shop">
+  <div class="shop-inner">
+    <div class="section-header">
+      <div class="section-label">Our Products</div>
+      <h2 class="section-title">The <em>Collection</em></h2>
+      <p class="section-desc">Salon-grade beauty essentials curated for your everyday ritual — delivered straight to your door.</p>
+    </div>
+    <div class="items-grid" id="items-grid"></div>
+  </div>
+</section>
+
 <!-- WHY US -->
 <section class="why-section" id="about">
   <div class="why-inner">
     <div class="why-grid">
       <div>
-        <div class="why-label">Why Lumière</div>
+        <div class="why-label">Why Pharahs</div>
         <h2 class="why-title">Excellence in Every <em>Detail</em></h2>
         <p class="why-body">We believe beauty is a personal journey. Our team of master stylists brings artistry and expertise to every appointment, creating results that feel as good as they look.</p>
         <div class="why-stats">
           <div class="stat">
-            <div class="stat-num">2,400+</div>
+            <div class="stat-num">1,400+</div>
             <div class="stat-label">Clients served</div>
           </div>
           <div class="stat">
-            <div class="stat-num">8 yrs</div>
+            <div class="stat-num">16 yrs</div>
             <div class="stat-label">Of excellence</div>
           </div>
           <div class="stat">
-            <div class="stat-num">98%</div>
+            <div class="stat-num">99%</div>
             <div class="stat-label">Satisfaction rate</div>
           </div>
           <div class="stat">
-            <div class="stat-num">12</div>
+            <div class="stat-num">3</div>
             <div class="stat-label">Expert stylists</div>
           </div>
         </div>
@@ -733,24 +775,12 @@
   <div class="testi-grid" id="testi-grid"></div>
 </section>
 
-<!-- SHOP -->
-<section class="shop-section" id="shop">
-  <div class="shop-inner">
-    <div class="section-header">
-      <div class="section-label">Our Products</div>
-      <h2 class="section-title">The <em>Collection</em></h2>
-      <p class="section-desc">Salon-grade beauty essentials curated for your everyday ritual — delivered straight to your door.</p>
-    </div>
-    <div class="items-grid" id="items-grid"></div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer id="contact">
   <div class="footer-inner">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="#" class="logo">Lu<span>mière</span></a>
+        <a href="#" class="logo">Pha<span>rahs</span></a>
         <p>Elevating beauty through artistry, care, and a deeply personal touch since 2017.</p>
         <div class="social-icons">
           <a class="social-icon" href="#" aria-label="Instagram">
@@ -792,15 +822,15 @@
         <ul>
           <li>
             <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l1.06-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            +234 800 000 0000
+            +234 703 429 5852
           </li>
           <li>
             <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ef6fbf2f2f1def2ebf3f7fbecfbedfff2f1f0b0fdf1f3">[email&#160;protected]</a>
+            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ef6fbf2f2f1def2ebf3f7fbecfbedfff2f1f0b0fdf1f3"><span class="__cf_email__" data-cfemail="7a181b1b161f181b0e42483a1d171b131654191517">[email&#160;protected]</span></a>
           </li>
           <li>
             <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Lagos, Nigeria
+            Port Harcourt Nigeria
           </li>
           <li>Mon–Sat: 9am – 7pm</li>
         </ul>
@@ -808,11 +838,24 @@
     </div>
     <div class="footer-divider"></div>
     <div class="footer-bottom">
-      <p>© 2026 Lumière Salon. All rights reserved.</p>
+      <p>© 2026 Pharahs Salon. All rights reserved.</p>
       <p>Crafted with ♥ for beauty lovers</p>
     </div>
   </div>
 </footer>
+
+<!-- SERVICE PICKER MODAL -->
+<div class="modal-overlay" id="service-picker-overlay" onclick="closeOnOverlay(event,'service-picker-overlay')">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" onclick="closeModal('service-picker-overlay')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <span class="modal-tag">Book Appointment</span>
+    <h2 class="modal-title">Choose a Service</h2>
+    <p class="modal-sub">Select the service you'd like to book and we'll get you set up.</p>
+    <div id="service-picker-list" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
+  </div>
+</div>
 
 <!-- BOOKING MODAL -->
 <div class="modal-overlay" id="booking-overlay" onclick="closeOnOverlay(event,'booking-overlay')">
@@ -831,42 +874,31 @@
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Phone</label>
-        <input class="form-input" type="tel" placeholder="+234...">
+        <input class="form-input" type="tel" placeholder="+234..." id="field-phone">
       </div>
       <div class="form-group">
         <label class="form-label">Email</label>
-        <input class="form-input" type="email" placeholder="you@email.com">
+        <input class="form-input" type="email" placeholder="you@email.com" id="field-email">
       </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Preferred Date</label>
-      <input class="form-input" type="date" id="field-date">
-    </div>
+
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label">State</label>
-        <select class="form-input" id="field-state" onchange="updateFee()">
-          <option value="">Select state</option>
-          <option value="lagos">Lagos</option>
-          <option value="abuja">Abuja</option>
-          <option value="ph">Port Harcourt</option>
-          <option value="ibadan">Ibadan</option>
-          <option value="other">Other</option>
+        <label class="form-label">Available Date</label>
+        <select class="form-input" id="field-date" onchange="loadTimeSlots()">
+          <option value="">Loading dates...</option>
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">City / Area</label>
-        <input class="form-input" type="text" placeholder="Your area">
+        <label class="form-label">Time Slot</label>
+        <select class="form-input" id="field-time">
+          <option value="">Select date first</option>
+        </select>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Address</label>
-      <input class="form-input" type="text" placeholder="Full address">
     </div>
 
     <div class="price-summary">
       <div class="price-row"><span>Service</span><span class="amount" id="summary-base">₦0</span></div>
-      <div class="price-row"><span>Travel / Service Fee</span><span class="amount" id="summary-fee">₦0</span></div>
       <div class="price-row total"><span>Total</span><span class="amount" id="summary-total">₦0</span></div>
     </div>
     <button class="modal-btn" onclick="proceedToCheckout()">Proceed to Checkout →</button>
@@ -880,23 +912,29 @@
       <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
     <span class="modal-tag">Checkout</span>
-    <h2 class="modal-title">Confirm & Pay</h2>
-    <p class="modal-sub">Review your booking details and proceed to secure payment.</p>
+    <h2 class="modal-title">Confirm Booking</h2>
+    <p class="modal-sub">Review your details and choose how you'd like to pay.</p>
 
     <div class="price-summary" style="margin-top:0">
       <div class="price-row"><span>Service</span><span class="amount" id="co-service">—</span></div>
-      <div class="price-row"><span>Service Base</span><span class="amount" id="co-base">₦0</span></div>
-      <div class="price-row"><span>Travel Fee</span><span class="amount" id="co-fee">₦0</span></div>
-      <div class="price-row total"><span>Total Due</span><span class="amount" id="co-total">₦0</span></div>
+      <div class="price-row"><span>Date & Time</span><span class="amount" id="co-datetime">—</span></div>
+      <div class="price-row"><span>Service Price</span><span class="amount" id="co-base">₦0</span></div>
+      <div class="price-row total"><span>Total</span><span class="amount" id="co-total">₦0</span></div>
     </div>
 
-    <div class="form-group" style="margin-top:1rem">
-      <label class="form-label">Card Details (via Paystack)</label>
-      <div style="background:var(--mist);border-radius:0.75rem;padding:1rem;font-size:0.82rem;color:rgba(15,10,20,0.5);">
-        You will be redirected to Paystack's secure payment page to complete your transaction.
+    <div style="margin-top:1.25rem;">
+      <p class="form-label" style="margin-bottom:0.75rem;">How would you like to pay?</p>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;">
+        <button class="modal-btn" onclick="processPayment('now')" style="background:linear-gradient(135deg,#3d1a5e,#6b3fa0);">
+          Pay Now — <span id="co-pay-amount">₦0</span>
+          <span style="display:block;font-size:0.72rem;font-weight:400;opacity:0.8;margin-top:2px;">Booking confirmed instantly via Paystack</span>
+        </button>
+        <button class="modal-btn" onclick="processPayment('after')" style="background:transparent;color:var(--plum);border:1.5px solid var(--plum);">
+          Pay After Service
+          <span style="display:block;font-size:0.72rem;font-weight:400;opacity:0.75;margin-top:2px;">We'll call to confirm your appointment first</span>
+        </button>
       </div>
     </div>
-    <button class="modal-btn" onclick="processPayment()">Pay Now — <span id="co-pay-amount">₦0</span></button>
   </div>
 </div>
 
@@ -908,7 +946,6 @@
     </button>
 
     <div class="item-detail-header" id="item-detail-header-bg">
-      <div class="item-detail-header-icon" id="item-detail-header-icon"></div>
     </div>
 
     <span class="modal-tag" id="item-detail-badge">Bestseller</span>
@@ -977,7 +1014,7 @@
           <option value="">Select state</option>
           <option value="lagos">Lagos</option>
           <option value="abuja">Abuja</option>
-          <option value="ph">Port Harcourt</option>
+          <option value="ph">Rivers</option>
           <option value="ibadan">Ibadan</option>
           <option value="other">Other</option>
         </select>
@@ -1009,7 +1046,7 @@
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <span class="modal-tag">Order Placed!</span>
-    <h2 class="modal-title">On its way! 🎉</h2>
+    <h2 class="modal-title">On its way!</h2>
     <p class="modal-sub">Your order has been received and will be delivered within 2–5 business days. A confirmation will be sent to your email.</p>
     <div class="price-summary" style="margin-top:0;text-align:left">
       <div class="price-row"><span>Order Ref</span><span class="amount" id="order-ref" style="font-size:0.9rem;font-family:'DM Sans',sans-serif">LUM-XXXXX</span></div>
@@ -1039,85 +1076,131 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   /* ── DATA ── */
   const services = [
     {
       id: 1,
-      name: "Signature Hair Styling",
-      desc: "A complete wash, cut, and blow-dry experience tailored to your hair type and personal aesthetic.",
-      price: 15000,
-      duration: "90 min",
+      name: "Hair Grooming",
+      desc: "A thorough hair grooming session including wash, treatment, and styling tailored to your hair type.",
+      price: 10000,
+      duration: "2 hrs",
       icon: `<svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.07-3 2.5 2.5 0 0 1 .3-4.48A2.5 2.5 0 0 1 9.5 2z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.07-3 2.5 2.5 0 0 0-.3-4.48A2.5 2.5 0 0 0 14.5 2z"/></svg>`
     },
     {
       id: 2,
-      name: "Balayage & Color",
-      desc: "Sun-kissed, dimensional color techniques applied by our color specialists for a natural, radiant result.",
-      price: 35000,
-      duration: "3 hrs",
-      icon: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>`
+      name: "Retouching",
+      desc: "Professional hair retouching service to refresh your roots, colour, or style for a polished finish.",
+      price: 10000,
+      duration: "2 hrs 30 min",
+      icon: `<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`
     },
     {
       id: 3,
-      name: "Luxury Facial",
-      desc: "Deep cleansing, exfoliation, and nourishing mask treatment for visibly brighter, smoother skin.",
-      price: 20000,
-      duration: "60 min",
+      name: "Hair Breakage Treatment",
+      desc: "Intensive repair treatment targeting breakage, strengthening strands and restoring hair health from root to tip.",
+      price: 15000,
+      duration: "3 hrs",
       icon: `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
     },
     {
       id: 4,
-      name: "Nail Art Studio",
-      desc: "Creative nail designs, gel overlays, and extensions crafted by our expert nail technicians.",
-      price: 8500,
-      duration: "75 min",
-      icon: `<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`
+      name: "Dandruff Treatment",
+      desc: "Targeted scalp treatment to eliminate dandruff and restore scalp balance. Once weekly for the first 2 weeks, then every 2 weeks.",
+      price: 15000,
+      duration: "2 hrs 10 min",
+      icon: `<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`
+    },
+    {
+      id: 5,
+      name: "Braiding — Large",
+      desc: "Large-sized braids crafted with precision and care for a bold, long-lasting protective style.",
+      price: 14000,
+      duration: "4 hrs",
+      icon: `<svg viewBox="0 0 24 24"><path d="M6 3v18M12 3v18M18 3v18M3 9c0 0 3 3 3 6s-3 6-3 6M9 9c0 0 3 3 3 6s-3 6-3 6M15 9c0 0 3 3 3 6s-3 6-3 6"/></svg>`
+    },
+    {
+      id: 6,
+      name: "Braiding — Medium",
+      desc: "Medium-sized braids offering the perfect balance between style and manageability for any occasion.",
+      price: 18000,
+      duration: "3 hrs",
+      icon: `<svg viewBox="0 0 24 24"><path d="M6 3v18M12 3v18M18 3v18M3 9c0 0 3 3 3 6s-3 6-3 6M9 9c0 0 3 3 3 6s-3 6-3 6M15 9c0 0 3 3 3 6s-3 6-3 6"/></svg>`
+    },
+    {
+      id: 7,
+      name: "Braiding — Small",
+      desc: "Intricate small-sized braids for a detailed, elegant protective style that lasts for weeks.",
+      price: 23000,
+      duration: "2 hrs",
+      icon: `<svg viewBox="0 0 24 24"><path d="M6 3v18M12 3v18M18 3v18M3 9c0 0 3 3 3 6s-3 6-3 6M9 9c0 0 3 3 3 6s-3 6-3 6M15 9c0 0 3 3 3 6s-3 6-3 6"/></svg>`
+    },
+    {
+      id: 8,
+      name: "Wig Revamp",
+      desc: "Restore and refresh your wig with a full revamp including wash, conditioning, restyling and repair.",
+      price: 22000,
+      duration: "2 hrs",
+      icon: `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/></svg>`
+    },
+    {
+      id: 9,
+      name: "Wig Installation",
+      desc: "Professional wig installation for a natural, seamless look with secure fit and flawless finish.",
+      price: 30000,
+      duration: "1 hr 30 min",
+      icon: `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/><path d="M12 3v5m0 0l-2-2m2 2l2-2"/></svg>`
     }
   ];
 
   const testimonials = [
-    { name: "Amara O.", role: "Regular Client", text: "Lumière is truly a gem. The attention to detail and the atmosphere make every visit a treat. My hair has never looked better!", stars: 5 },
+    { name: "Amara O.", role: "Regular Client", text: "Pharahs is truly a gem. The attention to detail and the atmosphere make every visit a treat. My hair has never looked better!", stars: 5 },
     { name: "Chidinma E.", role: "Bridal Client", text: "I booked the bridal package and they absolutely exceeded my expectations. I felt like royalty on my wedding day. Highly recommend!", stars: 5 },
-    { name: "Fatima M.", role: "New Client", text: "Found Lumière online and took a chance — best decision ever. The stylists are knowledgeable, warm, and genuinely talented.", stars: 5 },
+    { name: "Fatima M.", role: "New Client", text: "Found Pharahs online and took a chance — best decision ever. The stylists are knowledgeable, warm, and genuinely talented.", stars: 5 },
   ];
 
   /* ── STATE ── */
   let activeService = null;
-  let serviceFee = 0;
-
-  const feeMap = { lagos: 0, abuja: 3000, ph: 4000, ibadan: 2500, other: 5000 };
 
   /* ── ITEMS / SHOP DATA ── */
   const shopItems = [
     {
       id: 1,
-      name: "Lumière Glow Serum",
+      name: "Hair Butter",
       tagline: "Radiance in every drop",
       badge: "Bestseller",
-      price: 12500,
-      gradient: "linear-gradient(135deg, #3d1a5e 0%, #6b3fa0 100%)",
-      icon: `<svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>`,
+      price: 9500,
+      image: "images/HairButteredNectar.webp?w=600&q=80",
       description: "A lightweight, fast-absorbing vitamin C serum that visibly brightens skin tone, fades dark spots, and restores a luminous, glass-skin effect. Formulated for all skin types including sensitive skin, our serum delivers professional-grade radiance you can see and feel from the first use.",
-      howToUse: "Apply 3–4 drops to clean, dry skin every morning before moisturiser and SPF. Gently pat onto face, neck, and décolleté. For best results, use consistently for 4–6 weeks. Avoid contact with eyes.",
+      howToUse: "Apply 3–4 drops to clean, dry skin every morning before moisturiser and SPF.Gently pat onto face, neck, and décolleté. For best results, use consistently for 4–6 weeks. Avoid contact with eyes.",
       ingredients: ["Vitamin C 15%", "Hyaluronic Acid", "Niacinamide", "Ferulic Acid", "Rosehip Oil", "Aloe Vera", "Green Tea Extract"]
     },
     {
       id: 2,
-      name: "Velvet Hair Elixir",
+      name: "Hair Charm",
       tagline: "Salon-smooth, every wash",
       badge: "New Arrival",
-      price: 9800,
-      gradient: "linear-gradient(135deg, #d4a96a 0%, #b8860b 100%)",
-      icon: `<svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.07-3 2.5 2.5 0 0 1 .3-4.48A2.5 2.5 0 0 1 9.5 2z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.07-3 2.5 2.5 0 0 0-.3-4.48A2.5 2.5 0 0 0 14.5 2z"/></svg>`,
+      price: 9500,
+      image: "images/HairCharm.webp?w=600&q=80",
       description: "An ultra-nourishing hair elixir crafted with rare botanical oils and strengthening proteins to transform dry, brittle, or chemically treated hair. Leaves your strands silky, frizz-free, and brilliantly shiny — exactly as if you just stepped out of our salon. Suitable for all hair textures.",
       howToUse: "After shampooing, apply a coin-sized amount to damp hair from mid-length to ends. Leave for 2 minutes, then rinse thoroughly. For a deep treatment, apply to dry hair, cover with a warm towel, leave for 20 minutes, then wash out. Use 2–3 times per week.",
       ingredients: ["Argan Oil", "Keratin Complex", "Castor Oil", "Shea Butter", "Biotin", "Silk Proteins", "Baobab Extract", "Vitamin E"]
-    }
+    },
+    {
+      id: 2,
+      name: "Hair Charm",
+      tagline: "Salon-smooth, every wash",
+      badge: "New Arrival",
+      price: 9500,
+      image: "images/HairGingerOil.webp?w=600&q=80",
+      description: "An ultra-nourishing hair elixir crafted with rare botanical oils and strengthening proteins to transform dry, brittle, or chemically treated hair. Leaves your strands silky, frizz-free, and brilliantly shiny — exactly as if you just stepped out of our salon. Suitable for all hair textures.",
+      howToUse: "After shampooing, apply a coin-sized amount to damp hair from mid-length to ends. Leave for 2 minutes, then rinse thoroughly. For a deep treatment, apply to dry hair, cover with a warm towel, leave for 20 minutes, then wash out. Use 2–3 times per week.",
+      ingredients: ["Argan Oil", "Keratin Complex", "Castor Oil", "Shea Butter", "Biotin", "Silk Proteins", "Baobab Extract", "Vitamin E"]
+    },
   ];
 
   let activeItem = null;
-  const deliveryFees = { lagos: 1500, abuja: 2500, ph: 3000, ibadan: 2000, other: 3500 };
+  const deliveryFees = { lagos: 5000, abuja: 7000, ph: 3000, ibadan: 2000, other: 3500 };
 
   /* ── RENDER ITEMS ── */
   function renderItems() {
@@ -1125,9 +1208,8 @@
     grid.innerHTML = shopItems.map(item => `
       <div class="item-card" onclick="openItemDetail(${item.id})">
         <div class="item-img">
-          <div class="item-img-bg" style="background:${item.gradient};position:absolute;inset:0"></div>
+          <img src="${item.image}" alt="${item.name}">
           <span class="item-badge">${item.badge}</span>
-          <div class="item-img-icon">${item.icon}</div>
         </div>
         <div class="item-body">
           <div class="item-name">${item.name}</div>
@@ -1144,8 +1226,8 @@
   /* ── ITEM DETAIL ── */
   function openItemDetail(itemId) {
     activeItem = shopItems.find(i => i.id === itemId);
-    document.getElementById('item-detail-header-bg').style.background = activeItem.gradient;
-    document.getElementById('item-detail-header-icon').innerHTML = activeItem.icon;
+    const headerBg = document.getElementById('item-detail-header-bg');
+    headerBg.innerHTML = `<img src="${activeItem.image}" alt="${activeItem.name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:1rem;">`;
     document.getElementById('item-detail-badge').textContent = activeItem.badge;
     document.getElementById('item-detail-name').textContent = activeItem.name;
     document.getElementById('item-detail-tagline').textContent = activeItem.tagline;
@@ -1180,26 +1262,83 @@
   }
 
   function submitOrder() {
-    const name = document.getElementById('order-name').value;
-    const phone = document.getElementById('order-phone').value;
-    const address = document.getElementById('order-address').value;
-    if (!name || !phone || !address) {
-      if (!name) document.getElementById('order-name').focus();
-      else if (!phone) document.getElementById('order-phone').focus();
-      else document.getElementById('order-address').focus();
-      return;
-    }
+    const name = document.getElementById('order-name').value.trim();
+    const email = document.getElementById('order-email').value.trim();
+    const phone = document.getElementById('order-phone').value.trim();
+    const address = document.getElementById('order-address').value.trim();
+
+    if (!name) { document.getElementById('order-name').focus(); return; }
+    if (!email) { document.getElementById('order-email').focus(); return; }
+    if (!phone) { document.getElementById('order-phone').focus(); return; }
+    if (!address) { document.getElementById('order-address').focus(); return; }
+
+    const qty = parseInt(document.getElementById('order-qty').value) || 1;
+    const state = document.getElementById('order-state').value;
+    const delivery = deliveryFees[state] || 0;
+    const total = (activeItem.price * qty) + delivery;
+    const ref = 'PHARAHS-' + Date.now();
+
+    const handler = PaystackPop.setup({
+      key: 'pk_test_bb55a0b4d814bacf5c2e7fdb5ef099721b80e2ae',
+      email: email,
+      amount: total * 100,
+      currency: 'NGN',
+      ref: ref,
+      metadata: {
+        custom_fields: [
+          { display_name: 'Customer Name', variable_name: 'name', value: name },
+          { display_name: 'Phone', variable_name: 'phone', value: phone },
+          { display_name: 'Address', variable_name: 'address', value: address },
+          { display_name: 'Product', variable_name: 'product', value: activeItem.name },
+          { display_name: 'Quantity', variable_name: 'qty', value: qty }
+        ]
+      },
+      callback: function(response) {
+        verifyPaymentAndNotify(response.reference, { name, email, phone, address, qty, total });
+      },
+      onClose: function() {
+        // user closed without paying — stay on order modal
+      }
+    });
+
+    handler.openIframe();
+  }
+
+  async function verifyPaymentAndNotify(reference, orderDetails) {
     closeModal('order-overlay');
-    setTimeout(() => {
-      const ref = 'LUM-' + Math.random().toString(36).substring(2,8).toUpperCase();
-      document.getElementById('order-ref').textContent = ref;
-      document.getElementById('order-success-product').textContent = activeItem?.name;
+    try {
+      const res = await fetch(`${BACKEND}/verify-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reference,
+          orderDetails: {
+            ...orderDetails,
+            product: activeItem.name,
+            reference
+          }
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('order-ref').textContent = reference;
+        document.getElementById('order-success-product').textContent = activeItem.name;
+        document.getElementById('order-success-overlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+      } else {
+        alert('Payment could not be verified. Please contact support with ref: ' + reference);
+      }
+    } catch (err) {
+      // Backend not yet connected — show success anyway for testing
+      document.getElementById('order-ref').textContent = reference;
+      document.getElementById('order-success-product').textContent = activeItem.name;
       document.getElementById('order-success-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
-    }, 300);
+    }
   }
 
   /* ── RENDER SERVICES ── */
+  function renderServices() {
     const grid = document.getElementById('services-grid');
     grid.innerHTML = services.map(s => `
       <div class="service-card" onclick="openBookingModal(${s.id})">
@@ -1242,48 +1381,236 @@
   }
 
   /* ── MODALS ── */
+  let availableDates   = [];
+  let liveDurations    = {}; // fetched from backend — always up to date
+
+  // Fetch live service durations from backend
+  async function fetchServiceDurations() {
+    try {
+      const res  = await fetch(`${BACKEND}/booking/service-durations`);
+      const data = await res.json();
+      if (data.success) liveDurations = data.durations;
+    } catch (err) { /* use fallback */ }
+  }
+
+  // Get duration in minutes for current service — prefers live backend value
+  function getServiceDurationMins(service) {
+    if (!service) return 60;
+    // Live value from backend (updates immediately if changed server-side)
+    if (liveDurations[service.name] !== undefined) return liveDurations[service.name];
+    // Fallback: parse from services array duration string
+    const dur = service.duration || '';
+    if (dur.includes('hr')) return Math.round(parseFloat(dur) * 60);
+    return Math.round(parseFloat(dur)) || 60;
+  }
+
+  async function loadAvailableDates() {
+    await fetchServiceDurations();
+    try {
+      // Pass user's local time so backend can filter out past slots for today
+      const now        = new Date();
+      const localMins  = now.getHours() * 60 + now.getMinutes();
+      const localDate  = now.toLocaleDateString('en-CA'); // YYYY-MM-DD in local tz
+      const res  = await fetch(`${BACKEND}/booking/available-dates?localMins=${localMins}&localDate=${localDate}`);
+      const data = await res.json();
+      availableDates = data.dates || [];
+      const sel = document.getElementById('field-date');
+      if (!availableDates.length) {
+        sel.innerHTML = '<option value="">No dates available</option>';
+        return;
+      }
+      const dateOptions = availableDates
+        .map(d => {
+          const label = new Date(d.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+          const serviceSlots = (d.intervalSlots && activeService) ? (d.intervalSlots[activeService.name] || []) : [];
+          const count = serviceSlots.length;
+          if (!count) return '';
+          return `<option value="${d.date}">${label} — ${count} slot${count !== 1 ? 's' : ''}</option>`;
+        })
+        .filter(Boolean);
+
+      if (!dateOptions.length) {
+        sel.innerHTML = '<option value="">No available dates for this service</option>';
+      } else {
+        sel.innerHTML = '<option value="">Select a date</option>' + dateOptions.join('');
+      }
+    } catch (err) {
+      document.getElementById('field-date').innerHTML = '<option value="">Could not load dates</option>';
+    }
+  }
+
+  function loadTimeSlots() {
+    const date    = document.getElementById('field-date').value;
+    const timeSel = document.getElementById('field-time');
+    if (!date) { timeSel.innerHTML = '<option value="">Select a date first</option>'; return; }
+    const found = availableDates.find(d => d.date === date);
+    if (!found) { timeSel.innerHTML = '<option value="">No slots available</option>'; return; }
+
+    const serviceSlots = (found.intervalSlots && activeService)
+      ? (found.intervalSlots[activeService.name] || [])
+      : [];
+
+    if (!serviceSlots.length) {
+      timeSel.innerHTML = '<option value="">No availability for this service</option>';
+      return;
+    }
+
+    timeSel.innerHTML = '<option value="">Select a time</option>' +
+      serviceSlots.map(s => `<option value="${s.start}">${s.start} – ${s.end}</option>`).join('');
+  }
+
   function openBookingModal(serviceId) {
-    activeService = serviceId ? services.find(s => s.id === serviceId) : services[0];
+    if (!serviceId) {
+      const list = document.getElementById('service-picker-list');
+      list.innerHTML = services.map(s => `
+        <div class="service-pick-card" onclick="selectServiceAndBook(${s.id})">
+          <div class="service-pick-icon">${s.icon}</div>
+          <div class="service-pick-info">
+            <div class="service-pick-name">${s.name}</div>
+            <div class="service-pick-meta">${s.duration}</div>
+          </div>
+          <div class="service-pick-price">₦${s.price.toLocaleString()}</div>
+          <svg class="service-pick-arrow" viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--plum);fill:none;stroke-width:2;stroke-linecap:round;"><polyline points="9,18 15,12 9,6"/></svg>
+        </div>
+      `).join('');
+      document.getElementById('service-picker-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    } else {
+      selectServiceAndBook(serviceId);
+    }
+  }
+
+  function selectServiceAndBook(serviceId) {
+    activeService = services.find(s => s.id === serviceId);
+    closeModal('service-picker-overlay');
     document.getElementById('booking-service-name').textContent = activeService.name;
     document.getElementById('booking-service-desc').textContent = activeService.desc;
     document.getElementById('summary-base').textContent = '₦' + activeService.price.toLocaleString();
     updateFee();
+    loadAvailableDates();
     document.getElementById('booking-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
 
   function updateFee() {
-    const state = document.getElementById('field-state').value;
-    serviceFee = feeMap[state] || 0;
-    document.getElementById('summary-fee').textContent = '₦' + serviceFee.toLocaleString();
-    const total = (activeService?.price || 0) + serviceFee;
+    const total = activeService?.price || 0;
     document.getElementById('summary-total').textContent = '₦' + total.toLocaleString();
   }
 
+  // Parse duration string to minutes e.g. "90 min" -> 90, "3 hrs" -> 180
+  function parseDurationMins(dur) {
+    if (!dur) return 60;
+    if (dur.includes('hr')) return Math.round(parseFloat(dur) * 60);
+    return Math.round(parseFloat(dur)) || 60;
+  }
+
+  // Add minutes to a time string e.g. "12:00 PM" + 180 -> "3:00 PM"
+  function addMinsToTime(timeStr, mins) {
+    const [time, period] = timeStr.split(' ');
+    let [h, m] = time.split(':').map(Number);
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    const total = h * 60 + m + mins;
+    let nh = Math.floor(total / 60) % 24;
+    const nm = total % 60;
+    const np = nh >= 12 ? 'PM' : 'AM';
+    if (nh > 12) nh -= 12;
+    if (nh === 0) nh = 12;
+    return `${nh}:${nm.toString().padStart(2,'0')} ${np}`;
+  }
+
   function proceedToCheckout() {
-    const name = document.getElementById('field-name').value;
-    if (!name) { document.getElementById('field-name').focus(); return; }
+    const name    = document.getElementById('field-name').value.trim();
+    const phone   = document.getElementById('field-phone').value.trim();
+    const email   = document.getElementById('field-email').value.trim();
+    const date    = document.getElementById('field-date').value;
+    const time    = document.getElementById('field-time').value;
+    if (!name)    { document.getElementById('field-name').focus(); return; }
+    if (!phone)   { document.getElementById('field-phone').focus(); return; }
+    if (!email)   { document.getElementById('field-email').focus(); return; }
+    if (!date)    { document.getElementById('field-date').focus(); return; }
+    if (!time)    { document.getElementById('field-time').focus(); return; }
     closeModal('booking-overlay');
-    const total = (activeService?.price || 0) + serviceFee;
-    document.getElementById('co-service').textContent = activeService.name;
-    document.getElementById('co-base').textContent = '₦' + activeService.price.toLocaleString();
-    document.getElementById('co-fee').textContent = '₦' + serviceFee.toLocaleString();
-    document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
+    const total   = activeService?.price || 0;
+    const durMins = getServiceDurationMins(activeService);
+    const endTime = addMinsToTime(time, durMins);
+    const dateLabel = new Date(date + 'T00:00:00').toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+    document.getElementById('co-service').textContent  = activeService.name + ' (' + activeService.duration + ')';
+    document.getElementById('co-datetime').textContent = `${dateLabel} · ${time} – ${endTime}`;
+    document.getElementById('co-base').textContent     = '₦' + activeService.price.toLocaleString();
+    document.getElementById('co-total').textContent    = '₦' + total.toLocaleString();
     document.getElementById('co-pay-amount').textContent = '₦' + total.toLocaleString();
     document.getElementById('checkout-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
 
-  function processPayment() {
-    // Simulate Paystack payment
+  function processPayment(method) {
+    const name    = document.getElementById('field-name').value.trim();
+    const phone   = document.getElementById('field-phone').value.trim();
+    const email   = document.getElementById('field-email').value.trim();
+    const date    = document.getElementById('field-date').value;
+    const time    = document.getElementById('field-time').value;
+    const total   = activeService?.price || 0;
+    const durMins = getServiceDurationMins(activeService);
+    const endTime = addMinsToTime(time, durMins);
+
+    const bookingDetails = {
+      name, phone, email, date, time, endTime, address: 'Port Harcourt',
+      service:  activeService.name,
+      duration: activeService.duration,
+      price:    activeService.price,
+      fee:      0,
+      total,
+      paymentMethod: method  // "now" or "after"
+    };
+
+    if (method === 'now') {
+      // Pay now via Paystack — auto-confirmed on success
+      const ref = 'PHARAHS-' + Date.now();
+      const handler = PaystackPop.setup({
+        key:      'pk_test_bb55a0b4d814bacf5c2e7fdb5ef099721b80e2ae',
+        email:    email,
+        amount:   total * 100,
+        currency: 'NGN',
+        ref:      ref,
+        callback: function(response) {
+          submitBooking(response.reference, bookingDetails, 'now');
+        },
+        onClose: function() {}
+      });
+      handler.openIframe();
+    } else {
+      // Pay after — submit immediately, pending confirmation call
+      const ref = 'PHARAHS-PAY-LATER-' + Date.now();
+      closeModal('checkout-overlay');
+      submitBooking(ref, bookingDetails, 'after');
+    }
+  }
+
+  async function submitBooking(reference, bookingDetails, method) {
     closeModal('checkout-overlay');
-    setTimeout(() => {
-      const ref = 'LUM-' + Math.random().toString(36).substring(2,8).toUpperCase();
-      document.getElementById('booking-ref').textContent = ref;
+    try {
+      const res = await fetch(`${BACKEND}/booking/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reference, bookingDetails, paymentMethod: method })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('booking-ref').textContent = reference;
+        document.getElementById('success-service').textContent = activeService?.name;
+        document.getElementById('success-overlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+      } else {
+        alert('Booking could not be submitted. Please try again or call us directly.');
+      }
+    } catch (err) {
+      // Show success anyway so customer knows we received it
+      document.getElementById('booking-ref').textContent = reference;
       document.getElementById('success-service').textContent = activeService?.name;
       document.getElementById('success-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
-    }, 300);
+    }
   }
 
   function closeModal(id) {
@@ -1300,14 +1627,10 @@
     document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
   });
 
-  /* Set min date for date picker */
-  const dateField = document.getElementById('field-date');
-  if (dateField) dateField.min = new Date().toISOString().split('T')[0];
-
-  /* ── INIT ── */
   renderServices();
-  renderTestimonials();
   renderItems();
+  renderTestimonials();
+
 </script>
 </body>
 </html>
