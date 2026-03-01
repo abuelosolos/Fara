@@ -1,4 +1,9 @@
 {
+  "version": 2,
+  "builds": [
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "images/*", "use": "@vercel/static" }
+  ],
   "rewrites": [
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/((?!admin\\.html|index\\.html|images/.*).*)", "destination": "/index.html" }
