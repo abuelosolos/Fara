@@ -1,8 +1,11 @@
 {
+  "version": 2,
+  "buildCommand": "echo 'static only'",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
+    { "source": "/", "destination": "/index.html" }
   ]
 }
