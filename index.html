@@ -579,50 +579,6 @@
     border-radius: 2rem;
   }
 
-  /* Service picker cards */
-  .service-pick-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.1rem;
-    border: 1.5px solid rgba(107,63,160,0.12);
-    border-radius: 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--mist);
-  }
-  .service-pick-card:hover {
-    border-color: var(--violet);
-    background: var(--blush);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(61,26,94,0.08);
-  }
-  .service-pick-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 0.75rem;
-    background: linear-gradient(135deg,rgba(61,26,94,0.08),rgba(107,63,160,0.12));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .service-pick-icon svg {
-    width: 20px;
-    height: 20px;
-    stroke: var(--plum);
-    fill: none;
-    stroke-width: 1.75;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .service-pick-info { flex: 1; min-width: 0; }
-  .service-pick-name { font-size: 0.95rem; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
-  .service-pick-meta { font-size: 0.78rem; color: rgba(15,10,20,0.45); }
-  .service-pick-price { font-size: 0.95rem; font-weight: 600; color: var(--plum); white-space: nowrap; }
-  .service-pick-arrow { opacity: 0.3; transition: opacity 0.2s; }
-  .service-pick-card:hover .service-pick-arrow { opacity: 1; }
-
   .modal-btn-ghost {
     width: 100%; background: transparent; color: var(--plum);
     border: 1.5px solid rgba(107,63,160,0.25); cursor: pointer;
@@ -846,7 +802,7 @@
           </li>
           <li>
             <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ef6fbf2f2f1def2ebf3f7fbecfbedfff2f1f0b0fdf1f3"><span class="__cf_email__" data-cfemail="e28083838e87808396dad0a2858f838b8ecc818d8f">[email&#160;protected]</span></a>
+            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ef6fbf2f2f1def2ebf3f7fbecfbedfff2f1f0b0fdf1f3"><span class="__cf_email__" data-cfemail="eb898a8a878e898a9fd3d9ab8c868a8287c5888486">[email&#160;protected]</span></a>
           </li>
           <li>
             <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -863,19 +819,6 @@
     </div>
   </div>
 </footer>
-
-<!-- SERVICE PICKER MODAL -->
-<div class="modal-overlay" id="service-picker-overlay" onclick="closeOnOverlay(event,'service-picker-overlay')">
-  <div class="modal" style="max-width:520px;">
-    <button class="modal-close" onclick="closeModal('service-picker-overlay')">
-      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-    <span class="modal-tag">Book Appointment</span>
-    <h2 class="modal-title">Choose a Service</h2>
-    <p class="modal-sub">Select the service you'd like to book and we'll get you set up.</p>
-    <div id="service-picker-list" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
-  </div>
-</div>
 
 <!-- BOOKING MODAL -->
 <div class="modal-overlay" id="booking-overlay" onclick="closeOnOverlay(event,'booking-overlay')">
@@ -1139,10 +1082,10 @@
     { name: "Fatima M.", role: "New Client", text: "Found Pharahs online and took a chance — best decision ever. The stylists are knowledgeable, warm, and genuinely talented.", stars: 5 },
   ];
 
-  /* ── BACKEND URL — auto-switches between local and live ── */
+  /* ── BACKEND URL ── */
   const BACKEND = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
-    fara-production.up.railway.app // ← replace with your Railway URL
+    : 'https://fara-production.up.railway.app';
 
   /* ── STATE ── */
   let activeService = null;
@@ -1404,22 +1347,18 @@
         sel.innerHTML = '<option value="">No dates available</option>';
         return;
       }
-      const dateOptions = availableDates.map(d => {
-        const label = new Date(d.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
-        let count = 0;
-        if (d.intervalSlots) {
-          if (activeService && d.intervalSlots[activeService.name]) {
-            count = d.intervalSlots[activeService.name].length;
-          } else {
-            count = Object.values(d.intervalSlots).reduce((sum, arr) => sum + arr.length, 0);
-          }
-        }
-        if (!count) return '';
-        return `<option value="${d.date}">${label} — ${count} slot${count !== 1 ? 's' : ''}</option>`;
-      }).filter(Boolean);
+      const dateOptions = availableDates
+        .map(d => {
+          const label = new Date(d.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+          const serviceSlots = (d.intervalSlots && activeService) ? (d.intervalSlots[activeService.name] || []) : [];
+          const count = serviceSlots.length;
+          if (!count) return '';
+          return `<option value="${d.date}">${label} — ${count} slot${count !== 1 ? 's' : ''}</option>`;
+        })
+        .filter(Boolean);
 
       if (!dateOptions.length) {
-        sel.innerHTML = '<option value="">No available dates</option>';
+        sel.innerHTML = '<option value="">No available dates for this service</option>';
       } else {
         sel.innerHTML = '<option value="">Select a date</option>' + dateOptions.join('');
       }
@@ -1435,8 +1374,8 @@
     const found = availableDates.find(d => d.date === date);
     if (!found) { timeSel.innerHTML = '<option value="">No slots available</option>'; return; }
 
-    const serviceSlots = (found.intervalSlots && activeService && found.intervalSlots[activeService.name])
-      ? found.intervalSlots[activeService.name]
+    const serviceSlots = (found.intervalSlots && activeService)
+      ? (found.intervalSlots[activeService.name] || [])
       : [];
 
     if (!serviceSlots.length) {
@@ -1449,30 +1388,7 @@
   }
 
   function openBookingModal(serviceId) {
-    if (!serviceId) {
-      // Show service picker first
-      const list = document.getElementById('service-picker-list');
-      list.innerHTML = services.map(s => `
-        <div class="service-pick-card" onclick="selectServiceAndBook(${s.id})">
-          <div class="service-pick-icon">${s.icon}</div>
-          <div class="service-pick-info">
-            <div class="service-pick-name">${s.name}</div>
-            <div class="service-pick-meta">${s.duration}</div>
-          </div>
-          <div class="service-pick-price">₦${s.price.toLocaleString()}</div>
-          <svg class="service-pick-arrow" viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--plum);fill:none;stroke-width:2;stroke-linecap:round;"><polyline points="9,18 15,12 9,6"/></svg>
-        </div>
-      `).join('');
-      document.getElementById('service-picker-overlay').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    } else {
-      selectServiceAndBook(serviceId);
-    }
-  }
-
-  function selectServiceAndBook(serviceId) {
-    activeService = services.find(s => s.id === serviceId);
-    closeModal('service-picker-overlay');
+    activeService = serviceId ? services.find(s => s.id === serviceId) : services[0];
     document.getElementById('booking-service-name').textContent = activeService.name;
     document.getElementById('booking-service-desc').textContent = activeService.desc;
     document.getElementById('summary-base').textContent = '₦' + activeService.price.toLocaleString();
@@ -1617,7 +1533,6 @@
     document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
   });
 
-  /* ── INIT ── */
   renderServices();
   renderItems();
   renderTestimonials();
