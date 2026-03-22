@@ -347,10 +347,10 @@ function timeStrToMins(t) {
 // Returns next 60 days with interval slots per service.
 //
 // Logic:
-// - Day runs DAY_START_MINS → DAY_END_MINS (9 AM – 6 PM)
+// - Day runs DAY_START_MINS  DAY_END_MINS (9 AM – 6 PM)
 // - Each confirmed booking occupies [startMins, startMins + durMins)
 // - For each service, we generate clean non-overlapping start times
-//   stepping by that service's duration (9→12→3→6 for 3hr, 9→10:30→12→... for 90min)
+//   stepping by that service's duration (91236 for 3hr, 910:3012... for 90min)
 // - A start time is available if its full range [start, start+dur) does NOT
 //   overlap any confirmed booking on that day
 // - Cross-service blocking: a Facial booked 9-10AM blocks any other service
@@ -417,7 +417,7 @@ app.get('/booking/available-dates', async (req, res) => {
 
       // For today: effective start is the later of dayStart and current time
       // Add a 30-min buffer so nobody books a slot that's already starting
-      // Then round UP to the nearest 10 minutes (e.g. 9:07 → 9:10)
+      // Then round UP to the nearest 10 minutes (e.g. 9:07  9:10)
       function roundUpTo10(mins) {
         return Math.ceil(mins / 10) * 10;
       }
@@ -670,8 +670,8 @@ app.get('/admin/bookings', adminAuth, async (req, res) => {
   }
 });
 
-// Confirm booking → sends confirmation email, slot becomes unavailable to others
-// Cancel booking → slot opens back up
+// Confirm booking  sends confirmation email, slot becomes unavailable to others
+// Cancel booking  slot opens back up
 app.post('/admin/update-booking', adminAuth, async (req, res) => {
   const { reference, status } = req.body;
   try {
