@@ -22,8 +22,8 @@ const OWNER_EMAIL     = process.env.OWNER_EMAIL;
 const MONGO_URI       = process.env.MONGO_URI;
 const ADMIN_PASSWORD  = process.env.ADMIN_PASSWORD;
 
-const TEST_MODE  = true;                    // ← set false when you have a real domain
-const TEST_EMAIL = 'kbatomate@gmail.com';   // ← your Resend signup email
+const TEST_MODE  = false;                    // ← set false when you have a real domain
+const TEST_EMAIL = 'orders@maisonpharahs.store';   // ← your Resend signup email
 
 const resend = new Resend(RESEND_API_KEY);
 function toEmail(email) { return TEST_MODE ? TEST_EMAIL : email; }
@@ -141,7 +141,7 @@ function emailWrapper(content) {
     </div>
     <div style="padding:32px;">${content}</div>
     <div style="padding:20px 32px;border-top:1px solid rgba(107,63,160,0.08);text-align:center;">
-      <p style="font-size:12px;color:rgba(15,10,20,0.35);margin:0;">© 2026 Pharahs Salon · Questions? Call +234 800 000 0000</p>
+      <p style="font-size:12px;color:rgba(15,10,20,0.35);margin:0;">© 2026 Pharahs Salon · Questions? Call +234 703 429 5852</p>
     </div>
   </div>
 </body></html>`;
