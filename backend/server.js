@@ -16,16 +16,15 @@ app.use(express.static(path.join(__dirname, 'public')));
    CONFIG
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET;
-const RESEND_API_KEY  = process.env.RESEND_API_KEY;
 const FROM_EMAIL      = process.env.FROM_EMAIL;
 const OWNER_EMAIL     = process.env.OWNER_EMAIL;
 const MONGO_URI       = process.env.MONGO_URI;
 const ADMIN_PASSWORD  = process.env.ADMIN_PASSWORD;
 
-const TEST_MODE  = false;                    // ← set false when you have a real domain
-const TEST_EMAIL = 'orders@maisonpharahs.store';   // ← your Resend signup email
+const TEST_MODE  = false;
+const TEST_EMAIL = 'kbatomate@gmail.com';
 
-const resend = new Resend(RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 function toEmail(email) { return TEST_MODE ? TEST_EMAIL : email; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -52,24 +51,11 @@ const orderSchema = new mongoose.Schema({
 });
 const Order = mongoose.model('Order', orderSchema);
 
-/* ── Day Override Schema ──
-   Every day is open by default with DEFAULT_SLOTS.
-   You can:
-   - Block an entire day (blocked: true)
-   - Override slots for a specific day (slots: [...])
-   Booked+confirmed slots are excluded dynamically from bookings collection.
-*/
-// Working hours: 9 AM to 6 PM (in minutes from midnight)
-const DAY_START_MINS = 9 * 60;   // 9:00 AM
-const DAY_END_MINS   = 18 * 60;  // 6:00 PM
+const DAY_START_MINS = 9 * 60;
+const DAY_END_MINS   = 18 * 60;
 
-// Legacy — kept for admin override compatibility
 const DEFAULT_SLOTS = ['9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM'];
 
-/* ── SERVICE DURATIONS (single source of truth) ──
-   Update durations here and slot blocking updates automatically everywhere.
-   Format: minutes as a number.
-*/
 const SERVICE_DURATIONS = {
   'Hair Grooming':            120,
   'Retouching':               150,
@@ -82,23 +68,17 @@ const SERVICE_DURATIONS = {
   'Wig Installation':         90,
 };
 
-// Resolve duration in minutes for a booking
-// Uses SERVICE_DURATIONS as source of truth, falls back to saved duration string
 function resolveDurationMins(serviceName, savedDuration) {
-  // Always prefer live service definition so duration changes take effect immediately
-  if (SERVICE_DURATIONS[serviceName] !== undefined) {
-    return SERVICE_DURATIONS[serviceName];
-  }
-  // Fallback for unknown/custom services: parse saved duration string
+  if (SERVICE_DURATIONS[serviceName] !== undefined) return SERVICE_DURATIONS[serviceName];
   if (!savedDuration) return 60;
   if (savedDuration.includes('hr')) return Math.round(parseFloat(savedDuration) * 60);
   return Math.round(parseFloat(savedDuration));
 }
 
 const dayOverrideSchema = new mongoose.Schema({
-  date:    { type: String, required: true, unique: true }, // "2026-03-01"
+  date:    { type: String, required: true, unique: true },
   blocked: { type: Boolean, default: false },
-  slots:   { type: [String], default: null }               // null = use DEFAULT_SLOTS
+  slots:   { type: [String], default: null }
 });
 const DayOverride = mongoose.model('DayOverride', dayOverrideSchema);
 
@@ -110,19 +90,14 @@ const bookingSchema = new mongoose.Schema({
   phone:         String,
   address:       String,
   service:       String,
-  date:          String,   // "2026-03-01"
-  time:          String,   // "10:00 AM"
-  endTime:       String,   // "1:00 PM"  (start + duration)
-  duration:      String,   // "90 min"
+  date:          String,
+  time:          String,
+  endTime:       String,
+  duration:      String,
   paymentMethod: { type: String, default: 'now', enum: ['now','after'] },
   price:         Number,
   fee:           Number,
   total:         Number,
-  // pay-now + confirmed = slot immediately blocked
-  // pay-after + pending = awaiting your call, slot still open
-  // confirmed (from admin) = slot blocked
-  // cancelled = slot opens back up
-  // completed = done
   status:        { type: String, default: 'pending', enum: ['pending','confirmed','cancelled','completed'] },
   createdAt:     { type: Date, default: Date.now }
 });
@@ -141,7 +116,7 @@ function emailWrapper(content) {
     </div>
     <div style="padding:32px;">${content}</div>
     <div style="padding:20px 32px;border-top:1px solid rgba(107,63,160,0.08);text-align:center;">
-      <p style="font-size:12px;color:rgba(15,10,20,0.35);margin:0;">© 2026 Pharahs Salon · Questions? Call +234 703 429 5852</p>
+      <p style="font-size:12px;color:rgba(15,10,20,0.35);margin:0;">© 2026 Pharahs Salon · Questions? Call +234 800 000 0000</p>
     </div>
   </div>
 </body></html>`;
@@ -164,9 +139,9 @@ function summaryBlock(order) {
 }
 
 function bookingSummaryBlock(b) {
-  const dateLabel  = new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const timeRange  = b.endTime ? `${b.time} – ${b.endTime}` : b.time;
-  const payLabel   = b.paymentMethod === 'after' ? 'Pay After Service' : 'Paid via Card';
+  const dateLabel = new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const timeRange = b.endTime ? `${b.time} – ${b.endTime}` : b.time;
+  const payLabel  = b.paymentMethod === 'after' ? 'Pay After Service' : 'Paid via Card';
   return `
   <div style="background:#f0ebf7;border-radius:12px;padding:20px;margin:20px 0;">
     <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#6b3fa0;margin:0 0 12px;">Appointment Details</p>
@@ -249,19 +224,16 @@ function getOrderEmailTemplate(order, status, delayReason = '') {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 app.get('/ping', (req, res) => res.json({ success: true, message: 'Pharahs backend running ✅' }));
 
-// Public — frontend reads this to show correct duration on booking page
 app.get('/booking/service-durations', (req, res) => {
   res.json({ success: true, durations: SERVICE_DURATIONS });
 });
 
-// Admin — update a service duration (takes effect immediately on all future slot checks)
 app.post('/admin/set-service-duration', adminAuth, async (req, res) => {
   const { service, minutes } = req.body;
   if (!service || typeof minutes !== 'number') {
     return res.status(400).json({ success: false, message: 'Provide service name and minutes' });
   }
   SERVICE_DURATIONS[service] = minutes;
-  console.log(`✅ Duration updated: ${service} = ${minutes} mins`);
   res.json({ success: true, durations: SERVICE_DURATIONS });
 });
 
@@ -309,25 +281,6 @@ app.post('/verify-payment', async (req, res) => {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    BOOKINGS — Public Routes
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-// Server-side duration slot helper
-function getSlotsForBookingServer(startTime, durationMins, allSlots) {
-  function timeToMins(t) {
-    const [time, period] = t.split(' ');
-    let [h, m] = time.split(':').map(Number);
-    if (period === 'PM' && h !== 12) h += 12;
-    if (period === 'AM' && h === 12) h = 0;
-    return h * 60 + m;
-  }
-  const start = timeToMins(startTime);
-  const end   = start + durationMins;
-  return allSlots.filter(s => {
-    const sm = timeToMins(s);
-    return sm >= start && sm < end;
-  });
-}
-
-// ── Time helpers (module-level so reusable) ──────────────────────
 function minsToTimeStr(mins) {
   let h = Math.floor(mins / 60) % 24;
   const m = mins % 60;
@@ -336,6 +289,7 @@ function minsToTimeStr(mins) {
   if (h === 0) h = 12;
   return `${h}:${m.toString().padStart(2,'0')} ${period}`;
 }
+
 function timeStrToMins(t) {
   const [time, period] = t.split(' ');
   let [h, m] = time.split(':').map(Number);
@@ -344,17 +298,6 @@ function timeStrToMins(t) {
   return h * 60 + m;
 }
 
-// Returns next 60 days with interval slots per service.
-//
-// Logic:
-// - Day runs DAY_START_MINS  DAY_END_MINS (9 AM – 6 PM)
-// - Each confirmed booking occupies [startMins, startMins + durMins)
-// - For each service, we generate clean non-overlapping start times
-//   stepping by that service's duration (91236 for 3hr, 910:3012... for 90min)
-// - A start time is available if its full range [start, start+dur) does NOT
-//   overlap any confirmed booking on that day
-// - Cross-service blocking: a Facial booked 9-10AM blocks any other service
-//   whose interval overlaps 9-10AM
 app.get('/booking/available-dates', async (req, res) => {
   try {
     const overrides = await DayOverride.find({});
@@ -363,7 +306,6 @@ app.get('/booking/available-dates', async (req, res) => {
     const overrideMap = {};
     overrides.forEach(o => { overrideMap[o.date] = o; });
 
-    // Build list of busy ranges per date: [{start, end}] in minutes
     const busyMap = {};
     confirmed.forEach(b => {
       if (!busyMap[b.date]) busyMap[b.date] = [];
@@ -372,34 +314,30 @@ app.get('/booking/available-dates', async (req, res) => {
       busyMap[b.date].push({ start: startMins, end: startMins + durMins });
     });
 
-    // Check if a range [startMins, startMins+durMins) overlaps any busy range
     function isRangeFree(busyRanges, startMins, durMins) {
       const endMins = startMins + durMins;
       return !busyRanges.some(r => startMins < r.end && endMins > r.start);
     }
 
-    const result = [];
-    const now     = new Date();
+    function roundUpTo10(mins) {
+      return Math.ceil(mins / 10) * 10;
+    }
 
-    // Accept optional ?localMins=NNN from frontend (minutes since midnight in user's timezone)
-    // e.g. 12:30 PM = 750. Falls back to server time if not provided.
+    const result = [];
+    const now    = new Date();
+
     const localMinsParam = parseInt(req.query.localMins);
     const nowMinsToday   = !isNaN(localMinsParam) ? localMinsParam : (now.getHours() * 60 + now.getMinutes());
 
-    // Today's date string using the optional ?localDate=YYYY-MM-DD from frontend
-    // so the "today" cutoff matches the user's timezone, not the server's
     const localDateParam = req.query.localDate;
     const todayStr       = localDateParam || now.toISOString().split('T')[0];
+    const today          = new Date(todayStr + 'T00:00:00');
 
-    const today = new Date(todayStr + 'T00:00:00');
-
-    // Include today + next 60 days (i=0 is today)
     for (let i = 0; i <= 60; i++) {
       const d = new Date(today);
       d.setDate(today.getDate() + i);
-      const dateStr  = d.toISOString().split('T')[0];
+      const dateStr = d.toISOString().split('T')[0];
 
-      // Never show past dates — belt-and-suspenders guard
       if (dateStr < todayStr) continue;
 
       const override = overrideMap[dateStr];
@@ -407,7 +345,6 @@ app.get('/booking/available-dates', async (req, res) => {
 
       if (override && override.blocked) continue;
 
-      // Day boundaries — use override if set
       let dayStart = DAY_START_MINS;
       let dayEnd   = DAY_END_MINS;
       if (override && override.slots && override.slots.length) {
@@ -415,63 +352,41 @@ app.get('/booking/available-dates', async (req, res) => {
         dayEnd   = timeStrToMins(override.slots[override.slots.length - 1]) + 60;
       }
 
-      // For today: effective start is the later of dayStart and current time
-      // Add a 30-min buffer so nobody books a slot that's already starting
-      // Then round UP to the nearest 10 minutes (e.g. 9:07  9:10)
-      function roundUpTo10(mins) {
-        return Math.ceil(mins / 10) * 10;
-      }
-
-      let rawEffectiveStart = isToday ? Math.max(dayStart, nowMinsToday + 30) : dayStart;
+      let rawEffectiveStart   = isToday ? Math.max(dayStart, nowMinsToday + 30) : dayStart;
       const effectiveDayStart = isToday ? roundUpTo10(rawEffectiveStart) : dayStart;
 
-      // Skip today entirely if nothing fits before close
       if (effectiveDayStart >= dayEnd) continue;
 
-      const busyRanges = busyMap[dateStr] || [];
+      const busyRanges   = busyMap[dateStr] || [];
       const intervalSlots = {};
       let hasAny = false;
 
       Object.entries(SERVICE_DURATIONS).forEach(([serviceName, durMins]) => {
-        const available = [];
-
-        // Build full set of candidate start points:
-        // 1. Step through the whole day in durMins chunks from effectiveDayStart
-        // 2. Also add every confirmed booking's end time (so slots open right after a booking ends)
+        const available      = [];
         const candidateStarts = new Set();
 
-        // Fill day with regular intervals
         for (let t = effectiveDayStart; t + durMins <= dayEnd; t += durMins) {
           candidateStarts.add(t);
         }
 
-        // Also add booking end times as candidate starts (rounded to nearest 10)
         busyRanges.forEach(r => {
           const roundedEnd = roundUpTo10(r.end);
           if (roundedEnd >= effectiveDayStart && roundedEnd + durMins <= dayEnd) {
             candidateStarts.add(roundedEnd);
-            // Continue stepping forward from this end time to fill remaining day
             for (let t = roundedEnd + durMins; t + durMins <= dayEnd; t += durMins) {
               candidateStarts.add(t);
             }
           }
         });
 
-        // Test each candidate — only include if the full range is free and not in the past
         Array.from(candidateStarts).sort((a, b) => a - b).forEach(start => {
           if (start + durMins > dayEnd) return;
           if (isToday && start < effectiveDayStart) return;
           if (!isRangeFree(busyRanges, start, durMins)) return;
-          available.push({
-            start: minsToTimeStr(start),
-            end:   minsToTimeStr(start + durMins)
-          });
+          available.push({ start: minsToTimeStr(start), end: minsToTimeStr(start + durMins) });
         });
 
-        if (available.length) {
-          intervalSlots[serviceName] = available;
-          hasAny = true;
-        }
+        if (available.length) { intervalSlots[serviceName] = available; hasAny = true; }
       });
 
       if (hasAny) result.push({ date: dateStr, intervalSlots });
@@ -484,29 +399,10 @@ app.get('/booking/available-dates', async (req, res) => {
   }
 });
 
-// Compute all slot strings covered by a booking given start time + duration mins
-function getSlotsForBooking(startTime, durationMins, allSlots) {
-  function timeToMins(t) {
-    const [time, period] = t.split(' ');
-    let [h, m] = time.split(':').map(Number);
-    if (period === 'PM' && h !== 12) h += 12;
-    if (period === 'AM' && h === 12) h = 0;
-    return h * 60 + m;
-  }
-  const start = timeToMins(startTime);
-  const end   = start + durationMins;
-  return allSlots.filter(s => {
-    const sm = timeToMins(s);
-    return sm >= start && sm < end;
-  });
-}
-
-// Create booking — pay now = auto-confirmed, pay after = pending (needs your call)
 app.post('/booking/create', async (req, res) => {
   const { reference, bookingDetails, paymentMethod } = req.body;
   const isPayNow = paymentMethod === 'now';
   try {
-    // Verify Paystack payment only for pay-now
     if (isPayNow) {
       const paystackRes  = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
         headers: { Authorization: `Bearer ${PAYSTACK_SECRET}` }
@@ -524,7 +420,6 @@ app.post('/booking/create', async (req, res) => {
     const timeRange = booking.endTime ? `${booking.time} – ${booking.endTime}` : booking.time;
 
     if (isPayNow) {
-      // Pay now — confirmed instantly
       await resend.emails.send({
         from:    FROM_EMAIL,
         to:      toEmail(booking.email),
@@ -566,7 +461,6 @@ app.post('/booking/create', async (req, res) => {
           </table>`)
       });
     } else {
-      // Pay after — pending, needs your call
       await resend.emails.send({
         from:    FROM_EMAIL,
         to:      toEmail(booking.email),
@@ -574,12 +468,10 @@ app.post('/booking/create', async (req, res) => {
         html:    emailWrapper(`
           <h2 style="color:#0f0a14;font-size:22px;font-weight:400;margin:0 0 8px;">Booking Request Received! 📅</h2>
           <p style="color:rgba(15,10,20,0.6);font-size:14px;line-height:1.75;margin:0 0 4px;">Hi <strong>${booking.name}</strong>, we've received your appointment request!</p>
-          <p style="color:rgba(15,10,20,0.6);font-size:14px;line-height:1.75;margin:0 0 16px;">
-            We will <strong>call you shortly</strong> to confirm. Payment will be collected after your service.
-          </p>
+          <p style="color:rgba(15,10,20,0.6);font-size:14px;line-height:1.75;margin:0 0 16px;">We will <strong>call you shortly</strong> to confirm. Payment will be collected after your service.</p>
           ${bookingSummaryBlock(booking)}
           <div style="background:#fff4e5;border-radius:12px;padding:16px 20px;margin-bottom:20px;border-left:4px solid #d4a96a;">
-            <p style="font-size:13px;color:#0f0a14;margin:0;">⏳ <strong>Not yet confirmed</strong> — we'll call you to lock in this slot. You'll receive a confirmation email once confirmed.</p>
+            <p style="font-size:13px;color:#0f0a14;margin:0;">⏳ <strong>Not yet confirmed</strong> — we'll call you to lock in this slot.</p>
           </div>
           <div style="background:#f0ebf7;border-radius:12px;padding:16px 20px;">
             <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#6b3fa0;margin:0 0 6px;">Booking Reference</p>
@@ -593,7 +485,7 @@ app.post('/booking/create', async (req, res) => {
         html: emailWrapper(`
           <h2 style="color:#0f0a14;margin:0 0 8px;">New Pay-After Booking!</h2>
           <div style="background:#fff4e5;border-radius:12px;padding:14px 16px;margin-bottom:16px;border-left:4px solid #d4a96a;">
-            <p style="font-size:13px;color:#0f0a14;margin:0;">📞 Call <strong>${booking.phone}</strong> to confirm, then mark as Confirmed in admin. Slot is NOT blocked until you confirm.</p>
+            <p style="font-size:13px;color:#0f0a14;margin:0;">📞 Call <strong>${booking.phone}</strong> to confirm, then mark as Confirmed in admin.</p>
           </div>
           <table style="width:100%;font-size:14px;border-collapse:collapse;">
             <tr><td style="padding:6px 0;color:rgba(15,10,20,0.55);">Customer</td><td style="text-align:right;font-weight:500;">${booking.name}</td></tr>
@@ -633,7 +525,6 @@ app.get('/admin/orders', adminAuth, async (req, res) => {
     const orders = await Order.find().sort({ createdAt: -1 });
     res.json({ success: true, orders });
   } catch (err) {
-    console.error('❌ Get orders error:', err);
     res.status(500).json({ success: false });
   }
 });
@@ -653,7 +544,6 @@ app.post('/admin/update-order', adminAuth, async (req, res) => {
     }
     res.json({ success: true, order });
   } catch (err) {
-    console.error('❌ Update error:', err);
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -670,15 +560,12 @@ app.get('/admin/bookings', adminAuth, async (req, res) => {
   }
 });
 
-// Confirm booking  sends confirmation email, slot becomes unavailable to others
-// Cancel booking  slot opens back up
 app.post('/admin/update-booking', adminAuth, async (req, res) => {
   const { reference, status } = req.body;
   try {
     const booking = await Booking.findOneAndUpdate({ reference }, { status }, { new: true });
     if (!booking) return res.json({ success: false, message: 'Booking not found' });
 
-    // Send email based on new status
     if (status === 'confirmed') {
       await resend.emails.send({
         from:    FROM_EMAIL,
@@ -689,7 +576,7 @@ app.post('/admin/update-booking', adminAuth, async (req, res) => {
           <p style="color:rgba(15,10,20,0.6);font-size:14px;line-height:1.75;margin:0 0 4px;">Great news, <strong>${booking.name}</strong>!</p>
           <p style="color:rgba(15,10,20,0.6);font-size:14px;line-height:1.75;margin:0 0 16px;">Your appointment has been confirmed. We look forward to seeing you!</p>
           ${bookingSummaryBlock(booking)}
-          <p style="color:rgba(15,10,20,0.6);font-size:13px;line-height:1.7;margin:0;">Please be at your address at the scheduled time. Our stylist will arrive within the slot. 💜</p>`)
+          <p style="color:rgba(15,10,20,0.6);font-size:13px;line-height:1.7;margin:0;">Please be at your address at the scheduled time. 💜</p>`)
       });
     }
 
@@ -703,9 +590,7 @@ app.post('/admin/update-booking', adminAuth, async (req, res) => {
           <p style="color:rgba(15,10,20,0.6);font-size:14px;line-height:1.75;margin:0 0 16px;">
             Hi <strong>${booking.name}</strong>, your booking for <strong>${booking.service}</strong> on ${booking.date} at ${booking.time} has been cancelled.
           </p>
-          <p style="color:rgba(15,10,20,0.6);font-size:13px;line-height:1.7;margin:0;">
-            If you have questions about your refund or wish to rebook, please call us or reply to this email. 💜
-          </p>`)
+          <p style="color:rgba(15,10,20,0.6);font-size:13px;line-height:1.7;margin:0;">If you have questions or wish to rebook, please call us or reply to this email. 💜</p>`)
       });
     }
 
@@ -731,10 +616,8 @@ app.post('/admin/update-booking', adminAuth, async (req, res) => {
 });
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ADMIN — Availability (Day Overrides)
+   ADMIN — Availability
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-// Get all overrides (blocked days + custom slot days)
 app.get('/admin/overrides', adminAuth, async (req, res) => {
   try {
     const overrides = await DayOverride.find().sort({ date: 1 });
@@ -744,14 +627,11 @@ app.get('/admin/overrides', adminAuth, async (req, res) => {
   }
 });
 
-// Block an entire day
 app.post('/admin/block-day', adminAuth, async (req, res) => {
   const { date } = req.body;
   try {
     const override = await DayOverride.findOneAndUpdate(
-      { date },
-      { blocked: true, slots: null },
-      { upsert: true, new: true }
+      { date }, { blocked: true, slots: null }, { upsert: true, new: true }
     );
     res.json({ success: true, override });
   } catch (err) {
@@ -759,7 +639,6 @@ app.post('/admin/block-day', adminAuth, async (req, res) => {
   }
 });
 
-// Unblock a day
 app.post('/admin/unblock-day', adminAuth, async (req, res) => {
   const { date } = req.body;
   try {
@@ -770,14 +649,11 @@ app.post('/admin/unblock-day', adminAuth, async (req, res) => {
   }
 });
 
-// Set custom slots for a specific day (overrides defaults)
 app.post('/admin/set-slots', adminAuth, async (req, res) => {
   const { date, slots } = req.body;
   try {
     const override = await DayOverride.findOneAndUpdate(
-      { date },
-      { blocked: false, slots },
-      { upsert: true, new: true }
+      { date }, { blocked: false, slots }, { upsert: true, new: true }
     );
     res.json({ success: true, override });
   } catch (err) {
@@ -785,7 +661,6 @@ app.post('/admin/set-slots', adminAuth, async (req, res) => {
   }
 });
 
-// Reset a day back to default slots
 app.post('/admin/reset-day', adminAuth, async (req, res) => {
   const { date } = req.body;
   try {
@@ -796,7 +671,6 @@ app.post('/admin/reset-day', adminAuth, async (req, res) => {
   }
 });
 
-// Update default slots (applies to all days with no override)
 app.post('/admin/set-default-slots', adminAuth, async (req, res) => {
   const { slots } = req.body;
   try {
