@@ -116,7 +116,7 @@ function emailWrapper(content) {
     </div>
     <div style="padding:32px;">${content}</div>
     <div style="padding:20px 32px;border-top:1px solid rgba(107,63,160,0.08);text-align:center;">
-      <p style="font-size:12px;color:rgba(15,10,20,0.35);margin:0;">© 2026 Pharahs Salon · Questions? Call +234 800 000 0000</p>
+      <p style="font-size:12px;color:rgba(15,10,20,0.35);margin:0;">© 2026 Pharahs Salon · Questions? Call +234 703 429 5852</p>
     </div>
   </div>
 </body></html>`;

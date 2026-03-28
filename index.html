@@ -3,20 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pharahs Salon</title>
+<title>Pharahs — Premium Salon & Beauty</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
   :root {
     --ink: #0f0a14;
-    --paper: #faf9f7;
+    --paper: #f5e6a3;
     --plum: #3d1a5e;
     --violet: #6b3fa0;
     --orchid: #c084fc;
     --blush: #f5e6ff;
     --mist: #f0ebf7;
     --gold: #d4a96a;
+    --card-1: #ffe0b2;
+    --card-2: #c8e6c9;
+    --card-3: #f8bbd0;
+    --card-4: #bbdefb;
+    --card-5: #fff9c4;
+    --card-6: #e1bee7;
+    --card-7: #b2dfdb;
+    --card-8: #ffccbc;
+    --card-9: #b3e5fc;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,7 +44,7 @@
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
     padding: 1.2rem 2.5rem;
-    background: rgba(250,249,247,0.85);
+    background: rgba(245,230,163,0.88);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(107,63,160,0.08);
     transition: box-shadow 0.3s;
@@ -224,7 +233,6 @@
   }
 
   .service-card {
-    background: #fff;
     border: 1px solid rgba(107,63,160,0.1);
     border-radius: 1.25rem;
     padding: 2rem 1.8rem;
@@ -522,7 +530,7 @@
   .modal-overlay.open { opacity: 1; visibility: visible; }
 
   .modal {
-    background: var(--paper);
+    background: #fff;
     border-radius: 1.5rem; padding: 2.5rem;
     max-width: 520px; width: 100%;
     transform: translateY(20px) scale(0.97);
@@ -609,6 +617,8 @@
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
     position: relative;
+    display: flex;
+    flex-direction: column;
   }
   .item-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(61,26,94,0.13); }
 
@@ -654,8 +664,8 @@
     backdrop-filter: blur(4px); border: 1px solid rgba(107,63,160,0.15);
   }
 
-  .item-body { padding: 1.6rem; display: flex; flex-direction: column; flex: 1; }
-  .item-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .item-body { padding: 1.6rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
+  .item-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 1.2rem; }
   .item-name {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.5rem; font-weight: 400; color: var(--ink);
@@ -963,7 +973,7 @@
       <span class="modal-tag">Call to Book</span>
       <h3 class="modal-title" style="margin-bottom:0.5rem">Give us a ring</h3>
       <p class="modal-sub" style="margin-bottom:2rem">Our team is available Mon–Sat, 9am–7pm. Tap the number to call directly.</p>
-      <a href="tel:+2348000000000" class="csm-call-btn">
+      <a href="tel:+2347034295852" class="csm-call-btn">
         <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.95a16 16 0 0 0 6 6l.95-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17z"/></svg>
         +234 703 429 5852
       </a>
@@ -1015,11 +1025,11 @@
       <div class="footer-col">
         <h4>Services</h4>
         <ul>
-          <li><a href="#services">Hair Styling</a></li>
-          <li><a href="#services">Balayage & Color</a></li>
-          <li><a href="#services">Skincare Facials</a></li>
-          <li><a href="#services">Nail Art</a></li>
-          <li><a href="#services">Bridal Packages</a></li>
+          <li><a href="#services">Hair Grooming</a></li>
+          <li><a href="#services">Retouching</a></li>
+          <li><a href="#services">Hair Breakage Treatment</a></li>
+          <li><a href="#services">Braiding</a></li>
+          <li><a href="#services">Wig Installation</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1041,7 +1051,7 @@
           </li>
           <li>
             <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="mailto:baalebat82@gmail.com" class="__cf_email__" data-cfemail="9ef6fbf2f2f1def2ebf3f7fbecfbedfff2f1f0b0fdf1f3"><span class="__cf_email__" data-cfemail="7a181b1b161f181b0e42483a1d171b131654191517">baalebat82@gmail.com</span></a>
+            <a href="mailto:baalabat82@gmail.com" class="__cf_email__" data-cfemail="9ef6fbf2f2f1def2ebf3f7fbecfbedfff2f1f0b0fdf1f3"><span class="__cf_email__" data-cfemail="7a181b1b161f181b0e42483a1d171b131654191517">baalebat82@gmail.com</span></a>
           </li>
           <li>
             <svg style="width:12px;height:12px;stroke:var(--orchid);fill:none;stroke-width:2;display:inline;margin-right:6px" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1308,7 +1318,7 @@
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  const BACKEND = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:3000" : " https://pharahs-backend.onrender.com";
+  const BACKEND = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:3000" : "https://fara-production.up.railway.app";
   /* ── DATA ── */
   const services = [
     {
@@ -1596,9 +1606,10 @@
 
   /* ── RENDER SERVICES ── */
   function renderServices() {
+    const cardColors = ['var(--card-1)','var(--card-2)','var(--card-3)','var(--card-4)','var(--card-5)','var(--card-6)','var(--card-7)','var(--card-8)','var(--card-9)'];
     const grid = document.getElementById('services-grid');
-    grid.innerHTML = services.map(s => `
-      <div class="service-card" onclick="openBookingModal(${s.id})">
+    grid.innerHTML = services.map((s, i) => `
+      <div class="service-card" onclick="openBookingModal(${s.id})" style="background:${cardColors[i % cardColors.length]}">
         <div class="service-icon">${s.icon}</div>
         <div class="service-name">${s.name}</div>
         <div class="service-desc">${s.desc}</div>
